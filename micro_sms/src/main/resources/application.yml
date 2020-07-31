@@ -1,0 +1,15 @@
+server:
+  port: 9009
+spring:
+  application:
+    name: micro-sms #短信服务
+  rabbitmq:
+    host: 192.168.3.193
+    username: admin
+    password: admin
+aliyun:
+  sms:
+    accessKeyId: 123 #去阿里云申请短信服务就可以，需要钱的
+    accessKeySecret: 123
+    template_code: 123
+    sign_name: 自己做短信测试
