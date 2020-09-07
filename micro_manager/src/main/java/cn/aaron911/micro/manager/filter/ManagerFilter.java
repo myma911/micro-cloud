@@ -2,23 +2,16 @@ package cn.aaron911.micro.manager.filter;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 
-import cn.aaron911.micro.common.util.JwtUtil;
-import io.jsonwebtoken.Claims;
 
 /**
  * Zuul过滤器
  * 
  */
 public class ManagerFilter extends ZuulFilter {
-
-    @Autowired
-    private JwtUtil jwtUtil;
 
     /**
      * filterType：返回一个字符串代表过滤器的类型，在zuul中定义了四种不同生命周期的过滤器类型，具体如下：
@@ -59,34 +52,11 @@ public class ManagerFilter extends ZuulFilter {
     public Object run() throws ZuulException {
         RequestContext requestContext = RequestContext.getCurrentContext();
         HttpServletRequest request = requestContext.getRequest();
-
-        if (request.getMethod().equals("OPTIONS")){
+        
+        if (request.getRequestURI().contains("v2/api-docs")) {
             return null;
         }
-        if (request.getRequestURI().indexOf("login")>0){
-            return null;
-        }
-        String header = request.getHeader("Authorization");
-        if (header!=null&&!"".equals(header)){
-            if (header.startsWith("Bearer ")) {
-                String token = header.substring(7);
-                try {
-                    Claims claims = jwtUtil.parseJWT(token);
-                    String roles = (String) claims.get("roles");
-                    if (roles.equals("admin")){
-                        requestContext.addZuulRequestHeader("Authorization",header);
-                        return null;
-                    }
-                }catch (Exception e){
-                    requestContext.setSendZuulResponse(false);
-                }
-            }
-        }
-        // 令zuul过滤该请求，不对其进行路由
-        requestContext.setSendZuulResponse(false);
-        requestContext.setResponseStatusCode(403);
-        requestContext.setResponseBody("权限不足");
-        requestContext.getResponse().setContentType("text/html;charset=utf-8");
+        
         return null;
     }
 }

@@ -16,7 +16,6 @@ import cn.aaron911.micro.base.pojo.Label;
 import cn.aaron911.micro.base.service.LabelService;
 import cn.aaron911.micro.common.result.PageResult;
 import cn.aaron911.micro.common.result.Result;
-import cn.aaron911.micro.common.result.StatusCode;
 
 /**
  * 标签控制层
@@ -43,7 +42,7 @@ public class LabelController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public Result findAll() {
-		return new Result(true, StatusCode.OK, "查询成功", labelService.findAll());
+		return Result.ok(labelService.findAll());
 	}
 
 	/***
@@ -54,7 +53,7 @@ public class LabelController {
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public Result<Label> findById(@PathVariable String id) {
-		return new Result(true, StatusCode.OK, "查询成 功", labelService.findById(id));
+		return Result.ok(labelService.findById(id));
 	}
 
 	/**
@@ -66,7 +65,7 @@ public class LabelController {
 	@RequestMapping(method = RequestMethod.POST)
 	public Result add(@RequestBody Label label) {
 		labelService.add(label);
-		return new Result(true, StatusCode.OK, "增加成功");
+		return Result.ok("增加成功");
 	}
 
 	/**
@@ -80,7 +79,7 @@ public class LabelController {
 	public Result update(@RequestBody Label label, @PathVariable String id) {
 		label.setId(id);
 		labelService.update(label);
-		return new Result(true, StatusCode.OK, "修改成功");
+		return Result.ok("修改成功");
 	}
 
 	/**
@@ -92,7 +91,7 @@ public class LabelController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public Result deleteById(@PathVariable String id) {
 		labelService.deleteById(id);
-		return new Result(true, StatusCode.OK, "删除成功");
+		return Result.ok("删除成功");
 	}
 
 	/**
@@ -103,14 +102,13 @@ public class LabelController {
 	 */
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
 	public Result<List> findSearch(@RequestBody Map searchMap) {
-		return new Result<>(true, StatusCode.OK, "查询成功", labelService.findSearch(searchMap));
+		return Result.ok(labelService.findSearch(searchMap));
 	}
 
 	@RequestMapping(value = "/search/{page}/{size}", method = RequestMethod.POST)
-	public Result<List> findSearch(@RequestBody Map searchMap, @PathVariable int page, @PathVariable int size) {
-		Page pageList = labelService.findSearch(searchMap, page, size);
-		return new Result(true, StatusCode.OK, "查询成功",
-				new PageResult<>(pageList.getTotalElements(), pageList.getContent()));
+	public Result<PageResult> findSearch(@RequestBody Map searchMap, @PathVariable int page, @PathVariable int size) {
+		Page<?> pageList = labelService.findSearch(searchMap, page, size);
+		return Result.ok(new PageResult<>(pageList.getTotalElements(), pageList.getContent()));
 	}
 
 }

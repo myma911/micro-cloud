@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.aaron911.micro.common.result.Result;
-import cn.aaron911.micro.common.result.StatusCode;
 import cn.aaron911.micro.recruit.pojo.Recruit;
 import cn.aaron911.micro.recruit.service.RecruitService;
 
@@ -28,7 +27,7 @@ public class RecruitController {
     @RequestMapping(value="/search/recommend",method= RequestMethod.GET)
     public Result recommend(){
         List<Recruit> list = recruitService.findTop4ByStateOrderByCreatetimeDesc("2");
-        return new Result(true,StatusCode.OK,"查询成功",list);
+        return Result.ok("查询成功",list);
     }
 
     /**
@@ -37,6 +36,6 @@ public class RecruitController {
      */
     @RequestMapping(value="/search/newlist",method= RequestMethod.GET)
     public Result newlist(){
-        return new Result(true,StatusCode.OK,"查询成 功",recruitService.newlist());
+        return Result.ok("查询成 功",recruitService.newlist());
     }
 }

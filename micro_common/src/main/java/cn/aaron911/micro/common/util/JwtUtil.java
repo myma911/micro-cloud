@@ -3,6 +3,7 @@ package cn.aaron911.micro.common.util;
 import java.util.Date;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
@@ -12,6 +13,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 /**
  *
  */
+@Configuration
 @ConfigurationProperties("jwt.config")
 public class JwtUtil {
     private String key ;

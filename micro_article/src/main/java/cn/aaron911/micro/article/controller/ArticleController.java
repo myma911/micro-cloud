@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import cn.aaron911.micro.article.pojo.Article;
 import cn.aaron911.micro.article.service.ArticleService;
 import cn.aaron911.micro.common.result.Result;
-import cn.aaron911.micro.common.result.StatusCode;
 
 /**
  *
@@ -28,9 +27,9 @@ public class ArticleController {
      * @return
      */
     @RequestMapping(value = "/examine/{articleId}", method= RequestMethod.PUT)
-    public Result examine(@PathVariable String articleId){
+    public Result<String> examine(@PathVariable String articleId){
         articleService.examine(articleId);
-        return new Result(true,StatusCode.OK,"操作成功");
+        return Result.ok("操作成功");
     }
 
     /**
@@ -39,9 +38,9 @@ public class ArticleController {
      * @return
      */
     @RequestMapping(value = "/thumbup/{articleId}", method= RequestMethod.PUT)
-    public Result updateThumbup(@PathVariable String articleId){
+    public Result<String> updateThumbup(@PathVariable String articleId){
         articleService.updateThumbup(articleId);
-        return new Result(true,StatusCode.OK,"操作成功");
+        return Result.ok("操作成功");
     }
 
     /**
@@ -51,7 +50,7 @@ public class ArticleController {
      */
     @RequestMapping(value="/{id}",method= RequestMethod.GET)
     public Result findById(@PathVariable String id){
-        return new Result(true,StatusCode.OK,"查询成功",articleService.findById(id));
+        return Result.ok("查询成功", articleService.findById(id));
     }
 
     /**
@@ -62,7 +61,7 @@ public class ArticleController {
     public Result update(@RequestBody Article article, @PathVariable String id ){
         article.setId(id);
         articleService.update(article);
-        return new Result(true,StatusCode.OK,"修改成功");
+        return Result.ok("修改成功");
     }
 
     /**
@@ -72,6 +71,6 @@ public class ArticleController {
     @RequestMapping(value="/{id}",method= RequestMethod.DELETE)
     public Result delete(@PathVariable String id ){
         articleService.deleteById(id);
-        return new Result(true,StatusCode.OK,"删除成功");
+        return Result.ok("删除成功");
     }
 }

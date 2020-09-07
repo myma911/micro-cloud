@@ -1,25 +1,29 @@
 package cn.aaron911.micro.qa.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.aaron911.micro.common.annotation.Login;
+import cn.aaron911.micro.common.exception.AccessErrorException;
 import cn.aaron911.micro.common.result.PageResult;
 import cn.aaron911.micro.common.result.Result;
-import cn.aaron911.micro.common.result.StatusCode;
 import cn.aaron911.micro.qa.client.LabelClient;
 import cn.aaron911.micro.qa.pojo.Problem;
 import cn.aaron911.micro.qa.service.ProblemService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
- *
+ * 问答
  */
+@Api(tags="问答 HTTP 服务")
 @RestController
 @RequestMapping("/problem")
 public class ProblemController {
@@ -28,16 +32,21 @@ public class ProblemController {
     private ProblemService problemService;
 
     @Autowired
-    private HttpServletRequest request;
-
-    @Autowired
     private LabelClient labelClient;
 
-    @RequestMapping(value="/newlist/{labelid}/{page}/{size}",method=RequestMethod.GET)
-    public Result findNewListByLabelId(@PathVariable String labelid,@PathVariable int page,@PathVariable int size ){
+    @ApiOperation("根据labelid查询newlist")
+    
+    
+    
+    @GetMapping(value="/newlist/{labelid}")
+    public Result<PageResult<Problem>> findNewListByLabelId(
+    	@PathVariable String labelid,
+    	@RequestParam int page,
+    	@RequestParam int size 
+	){
         Page<Problem> pageList = problemService.findNewListByLabelId(labelid, page, size);
         PageResult<Problem> pageResult = new PageResult<> (pageList.getTotalElements(), pageList.getContent());
-        return new Result(true, StatusCode.OK, "查询成功",pageResult);
+        return Result.ok(pageResult);
     }
 
     /**
@@ -47,11 +56,16 @@ public class ProblemController {
      * @param size
      * @return
      */
-    @RequestMapping(value="/hotlist/{labelid}/{page}/{size}",method=RequestMethod.GET)
-    public Result findHotListByLabelId(@PathVariable String labelid,@PathVariable int page,@PathVariable int size ){
+    @ApiOperation("根据labelid查询hotlist")
+    @GetMapping(value="/hotlist/{labelid}")
+    public Result<PageResult<Problem>> findHotListByLabelId(
+		@PathVariable String labelid,
+		@RequestParam int page,
+		@RequestParam int size 
+	){
         Page<Problem> pageList = problemService.findHotListByLabelId(labelid, page, size);
         PageResult<Problem> pageResult = new PageResult<> (pageList.getTotalElements(), pageList.getContent());
-        return new Result(true, StatusCode.OK, "查询成功",pageResult);
+        return Result.ok(pageResult);
     }
 
     /**
@@ -61,30 +75,35 @@ public class ProblemController {
      * @param size
      * @return
      */
-    @RequestMapping(value="/waitlist/{labelid}/{page}/{size}",method=RequestMethod.GET)
-    public Result findWaitListByLabelId(@PathVariable String labelid,@PathVariable int page,@PathVariable int size ){
+    @ApiOperation("根据labelid查询waitlist")
+    @GetMapping(value="/waitlist/{labelid}")
+    public Result<PageResult<Problem>> findWaitListByLabelId(
+		@PathVariable String labelid,
+		@RequestParam int page,
+		@RequestParam int size 
+	){
         Page<Problem> pageList = problemService.findWaitListByLabelId(labelid, page, size);
         PageResult<Problem> pageResult = new PageResult<> (pageList.getTotalElements(), pageList.getContent());
-        return new Result(true, StatusCode.OK, "查询成功",pageResult);
+        return Result.ok(pageResult);
     }
 
     /**
      * 增加
      * @param problem
      */
-    @RequestMapping(method=RequestMethod.POST)
-    public Result add(@RequestBody Problem problem  ){
-        String token = (String) request.getAttribute("claims_user");
-        if(token==null || "".equals(token)){
-            return new Result(false, StatusCode.ACCESSERROR, "权限不足");
-        }
+    @ApiOperation("增加")
+    @PostMapping
+    public Result<String> add(@RequestBody Problem problem ){
         problemService.add(problem);
-        return new Result(true,StatusCode.OK,"增加成功");
+        return Result.ok();
     }
 
-    @RequestMapping(value = "/label/{labelid}")
-    public Result findLabelById(@PathVariable String labelid){
-        Result result = labelClient.findById(labelid);
+    
+    //@Login
+    @ApiOperation("查询")
+    @GetMapping(value = "/label/{labelid}")
+    public Result<?> findLabelById(@PathVariable String labelid){
+        Result<?> result = labelClient.findById(labelid);
         return result;
     }
 

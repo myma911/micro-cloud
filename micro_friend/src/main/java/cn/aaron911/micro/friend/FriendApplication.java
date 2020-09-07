@@ -25,4 +25,5 @@ public class FriendApplication {
     public JwtUtil jwtUtil(){
         return new JwtUtil();
     }
+    
 }

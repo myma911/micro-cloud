@@ -9,6 +9,7 @@
 	<packaging>pom</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<modules>
+		<module>micro_ai</module>
 		<module>micro_article</module>
 		<module>micro_base</module>
 		<module>micro_common</module>
@@ -25,7 +26,7 @@
 		<module>micro_recruit</module>
 		<module>micro_user</module>
 		<module>micro_web</module>
-		<module>micro_ai</module>
+		<module>micro_sso_server</module>
 	</modules>
 
 	<name>micro-cloud</name>
@@ -42,6 +43,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<swagger2.version>2.9.2</swagger2.version>
+		<hutool-all.version>4.6.8</hutool-all.version>
 	</properties>
 
 	<dependencyManagement>
@@ -68,12 +71,61 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${swagger2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${swagger2.version}</version>
+		</dependency>
+
+
+		<!-- 日志收集 -->
+		<dependency>
+			<groupId>com.plumelog</groupId>
+			<artifactId>plumelog-logback</artifactId>
+			<version>3.1</version>
+		</dependency>
+
+		<!-- plumelog 链路追踪 -->
+		<dependency>
+			<groupId>com.plumelog</groupId>
+			<artifactId>plumelog-trace</artifactId>
+			<version>3.1.2</version>
+		</dependency>
+
+
+
+		<!-- spring cloud 链路追踪 -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-sleuth</artifactId>
+		</dependency>
+
+
+		<!-- hutool -->
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-all</artifactId>
+			<version>${hutool-all.version}</version>
+		</dependency>
+
+
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
 	</dependencies>
 
-	<repositories>
+	<!-- <repositories>
 		<repository>
 			<id>spring-snapshots</id>
 			<name>Spring Snapshots</name>
@@ -91,7 +143,7 @@
 			</snapshots>
 		</repository>
 	</repositories>
-
+ -->
 	<build>
 
 		<plugins>

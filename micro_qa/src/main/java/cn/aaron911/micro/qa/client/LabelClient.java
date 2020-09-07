@@ -14,7 +14,7 @@ import cn.aaron911.micro.common.result.Result;
  * 止服务级联失败，同时提供失败回退机制，更优雅地应对失效，并使系统能更快地从异常中恢复。
  * 
  */
-@FeignClient(value = "micro-base", fallback = LabelClientImpl.class)
+@FeignClient(value = "micro-base", fallback = LabelClientFallBack.class)
 public interface LabelClient {
 
     @RequestMapping(value="/label/{id}", method = RequestMethod.GET)

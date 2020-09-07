@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cn.aaron911.micro.article.pojo.Comment;
 import cn.aaron911.micro.article.service.CommentService;
 import cn.aaron911.micro.common.result.Result;
-import cn.aaron911.micro.common.result.StatusCode;
+
 
 /**
  * 评论文章Controller
@@ -33,7 +33,7 @@ public class CommentController {
     @RequestMapping(method = RequestMethod.POST)
     public Result save(@RequestBody Comment comment) {
         commentService.add(comment);
-        return new Result(true, StatusCode.OK, "提交成功");
+        return Result.ok("提交成功");
     }
 
     /**
@@ -43,7 +43,7 @@ public class CommentController {
      */
     @RequestMapping(value = "/article/{articleid}", method = RequestMethod.GET)
     public Result findByArticleid(@PathVariable String articleid) {
-        return new Result(true, StatusCode.OK, "查询成功", commentService.findByArticleid(articleid));
+    	return Result.ok("查询成功", commentService.findByArticleid(articleid));
     }
     
     /**
@@ -54,7 +54,7 @@ public class CommentController {
     @RequestMapping(value = "/delete/{commentid}", method = RequestMethod.GET)
     public Result deleteByCommentid(@PathVariable String commentid) {
     	commentService.deleteByCommentid(commentid);
-        return new Result(true, StatusCode.OK, "删除成功");
+    	return Result.ok("删除成功");
     }
 
 

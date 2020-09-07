@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cn.aaron911.micro.common.result.PageResult;
 import cn.aaron911.micro.common.result.Result;
-import cn.aaron911.micro.common.result.StatusCode;
 import cn.aaron911.micro.search.pojo.Article;
 import cn.aaron911.micro.search.service.ArticleSerachService;
 
@@ -28,7 +27,7 @@ public class ArticleSearchController {
     public Result save(@RequestBody Article article) {
         article.setState("0");
         articleSerachService.add(article);
-        return new Result(true, StatusCode.OK, "操作成功");
+        return Result.ok("操作成功");
     }
 
     /**
@@ -41,7 +40,7 @@ public class ArticleSearchController {
     @RequestMapping(value = "/search/{keywords}/{page}/{size}", method = RequestMethod.GET)
     public Result findByTitleLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size) {
         Page<Article> pageResult = articleSerachService.findByTitleLike(keywords, page, size);
-        return new Result(true, StatusCode.OK, "查询成功", new PageResult<Article>(pageResult.getTotalElements(), pageResult.getContent()));
+        return Result.ok("查询成功", new PageResult<Article>(pageResult.getTotalElements(), pageResult.getContent()));
 
 
     }

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.aaron911.micro.common.result.Result;
-import cn.aaron911.micro.common.result.StatusCode;
 import cn.aaron911.micro.gathering.pojo.Gathering;
 import cn.aaron911.micro.gathering.service.GatheringService;
 
@@ -30,7 +29,7 @@ public class GatheringController {
     public Result update(@RequestBody Gathering gathering, @PathVariable String id ){
         gathering.setId(id);
         gatheringService.update(gathering);
-        return new Result(true,StatusCode.OK,"修改成功");
+        return Result.ok("修改成功");
     }
 
     /**
@@ -40,6 +39,6 @@ public class GatheringController {
     @RequestMapping(value="/{id}",method= RequestMethod.DELETE)
     public Result delete(@PathVariable String id ){
         gatheringService.deleteById(id);
-        return new Result(true,StatusCode.OK,"删除成功");
+        return Result.ok("删除成功");
     }
 }

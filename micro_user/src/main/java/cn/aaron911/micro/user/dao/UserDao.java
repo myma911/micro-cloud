@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import cn.aaron911.micro.user.pojo.User;
 
+
 /**
  *
  */
@@ -25,4 +26,6 @@ public interface UserDao extends JpaRepository<User,String>,JpaSpecificationExec
     @Modifying
     @Query(value = "update tb_user set followcount=followcount+? where id=?", nativeQuery = true)
     public void updatefollowcount(int x, String userid);
+
+	public User findByNicknameAndPassword(String nickname, String password);
 }

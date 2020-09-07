@@ -4,8 +4,8 @@ package cn.aaron911.micro.base.controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import cn.aaron911.micro.common.exception.StateCodeEnum;
 import cn.aaron911.micro.common.result.Result;
-import cn.aaron911.micro.common.result.StatusCode;
 
 /**
  * 异常处理
@@ -14,8 +14,8 @@ import cn.aaron911.micro.common.result.StatusCode;
 public class BaseExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
-    public Result error(Exception e){
+    public Result<Object> error(Exception e){
         e.printStackTrace();
-        return new Result(false,StatusCode.ERROR,  e.getMessage());
+        return new Result<>(StateCodeEnum.SYSTEM_ERROR);
     }
 }

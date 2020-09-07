@@ -11,12 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cn.aaron911.micro.common.result.PageResult;
 import cn.aaron911.micro.common.result.Result;
-import cn.aaron911.micro.common.result.StatusCode;
 import cn.aaron911.micro.spit.pojo.Spit;
 import cn.aaron911.micro.spit.service.SpitService;
 
 /**
- *
+ * 吐槽 HTTP 服务
  */
 @RestController
 @RequestMapping("/spit")
@@ -30,12 +29,12 @@ public class SpitController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Result findAll(){
-        return new Result(true, StatusCode.OK, "查询成功", spitService.findAll());
+        return Result.ok("查询成功", spitService.findAll());
     }
 
     @RequestMapping(value = "/{spitId}", method = RequestMethod.GET)
     public Result findById(@PathVariable String spitId){
-        return new Result(true, StatusCode.OK, "查询成功", spitService.findById(spitId));
+        return Result.ok("查询成功", spitService.findById(spitId));
     }
 
     /**
@@ -46,20 +45,20 @@ public class SpitController {
     @RequestMapping(method = RequestMethod.POST)
     public Result save(@RequestBody Spit spit){
         spitService.add(spit);
-        return new Result(true, StatusCode.OK, "添加成功");
+        return Result.ok("添加成功");
     }
 
     @RequestMapping(value = "/{spitId}", method = RequestMethod.PUT)
     public Result update(@PathVariable String spitId, @RequestBody Spit spit){
         spit.set_id(spitId);
         spitService.update(spit);
-        return new Result(true, StatusCode.OK, "修改成功");
+        return Result.ok("修改成功");
     }
 
     @RequestMapping(value = "/{spitId}", method = RequestMethod.DELETE)
     public Result delete(@PathVariable String spitId){
         spitService.deleteById(spitId);
-        return new Result(true, StatusCode.OK, "删除成功");
+        return Result.ok("删除成功");
     }
 
     /**
@@ -72,7 +71,7 @@ public class SpitController {
     @RequestMapping(value = "/comment/{patentid}/{page}/{size}", method = RequestMethod.GET)
     public Result findByParentid(@PathVariable String parentid,@PathVariable int page, @PathVariable int size) {
         Page<Spit> pageList = spitService.findByParentid(parentid, page, size);
-        return new Result(true, StatusCode.OK, "查询成功", new PageResult<Spit>(pageList.getTotalElements(), pageList.getContent()));
+        return  Result.ok("查询成功", new PageResult<Spit>(pageList.getTotalElements(), pageList.getContent()));
     }
 
     /**
@@ -85,11 +84,11 @@ public class SpitController {
         //判断用户是否已经点过赞,这里到时可以重构调用分布式锁
         String userId = "1111";//这里可以从token从用户中心服务拿用户id,暂时写死
         if (redisTemplate.opsForValue().get("thumbup_" + userId + "_" + id) != null) {
-            return new Result(false, StatusCode.REPERROR, "你已经点过赞了");
+            return Result.failed("你已经点过赞了");
         }
         spitService.updatethumbup(id);
         redisTemplate.opsForValue().set("thumbup_" + userId + "_" + id, "1");
-        return new Result(true, StatusCode.OK, "点赞成功");
+        return Result.ok("点赞成功");
     }
 
 

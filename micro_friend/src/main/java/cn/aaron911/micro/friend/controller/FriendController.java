@@ -8,16 +8,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.aaron911.micro.common.exception.AccessErrorException;
 import cn.aaron911.micro.common.result.Result;
-import cn.aaron911.micro.common.result.StatusCode;
 import cn.aaron911.micro.friend.client.UserClient;
 import cn.aaron911.micro.friend.service.FriendService;
 import io.jsonwebtoken.Claims;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
- *
+ * 朋友 HTTP 服务
  *
  */
+@Api(tags = "朋友 HTTP 服务")
 @RestController
 @RequestMapping("/friend")
 public class FriendController {
@@ -35,13 +38,14 @@ public class FriendController {
      * 添加好友或者添加非好友
      * @return
      */
+    @ApiOperation("添加好友或者添加非好友")
     @RequestMapping(value = "/like/{friendid}/{type}", method = RequestMethod.PUT)
-    public Result addFriend(@PathVariable String friendid, @PathVariable String type){
+    public Result<String> addFriend(@PathVariable String friendid, @PathVariable String type){
         //验证是否登录，并且拿到当前登录的用户id
         Claims claims = (Claims) request.getAttribute("claims_user");
         if(claims==null){
             //说明当前用户没有user角色
-            return new Result(false, StatusCode.LOGINERROR, "权限不足");
+        	throw new AccessErrorException();
         }
         //得到当前登录的用户id
         String userid = claims.getId();
@@ -51,41 +55,46 @@ public class FriendController {
                 //添加好友
                 int flag = friendService.addFriend(userid, friendid);
                 if(flag==0){
-                    return new Result(false, StatusCode.ERROR, "不能重复添加好友");
+                	return Result.failed("不能重复添加好友");
                 }
                 if(flag==1){
                     userClient.updatefanscountandfollowcount(userid, friendid, 1);
-                    return new Result(true, StatusCode.OK, "添加成功");
+                    return Result.ok("添加成功");
                 }
             }else if (type.equals("2")){
                 //添加非好友
                 int flag =  friendService.addNoFriend(userid, friendid);
                 if(flag==0){
-                    return new Result(false, StatusCode.ERROR, "不能重复添加非好友");
+                	return Result.failed("不能重复添加好友");
                 }
                 if(flag==1){
-                    return new Result(true, StatusCode.OK, "添加成功");
+                	return Result.ok("添加成功");
                 }
             }
-            return new Result(false, StatusCode.ERROR, "参数异常");
+            return Result.failed("参数异常");
         }else {
-            return new Result(false, StatusCode.ERROR, "参数异常");
+        	 return Result.failed("参数异常");
         }
     }
 
+    
+    /**
+     * 删除好友
+     */
+    @ApiOperation("删除好友")
     @RequestMapping(value = "/{friendid}", method = RequestMethod.DELETE)
-    public Result deleteFriend(@PathVariable String friendid){
+    public Result<String> deleteFriend(@PathVariable String friendid){
         //验证是否登录，并且拿到当前登录的用户id
         Claims claims = (Claims) request.getAttribute("claims_user");
         if(claims==null){
             //说明当前用户没有user角色
-            return new Result(false, StatusCode.LOGINERROR, "权限不足");
+        	throw new AccessErrorException();
         }
         //得到当前登录的用户id
         String userid = claims.getId();
         friendService.deleteFriend(userid, friendid);
         userClient.updatefanscountandfollowcount(userid, friendid, -1);
-        return new Result(true, StatusCode.OK, "删除成功");
+        return Result.ok("删除成功");
     }
 
 }

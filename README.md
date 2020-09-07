@@ -23,35 +23,44 @@ SpringBoot+SpringCloud+SpringData进行开发，前端技术采用Vue.js 。系�
 
 
 
+## 表结构分析
+我们这里采用的分库分表设计，每个业务模块为1个独立的数据库。
+micro_article  文章
+micro_base    基础
+micro_friend   交友
+micro_gathering 活动
+micro_qa 问答
+micro_recruit 招聘
+micro_user   用户
+micro_spit   吐槽
+
+
+
+
 
 ## 项目结构
 | 模块 | 名称 | 端口 | |
 | --- | --- | --- | --- |
-| `micro-eureka` | 服务注册中心服务 | http://127.0.0.1:6868/eureka/ |
+| `micro-ai` | 人工智能微服务 |  | |
 | `micro-article` | 文章 HTTP 服务 | HTTP 9004 |
 | `micro-base` | 基础 HTTP 服务 | HTTP 9001 |
+| `micro-common` | 公共工具类 |  |
 | `micro-config` | 配置中心 |  |
+| `micro-doc` | 文档说明 |  |
+| `micro-eureka` | 服务注册中心服务 | http://127.0.0.1:6868/eureka/ |
 | `micro-friend` | 朋友 HTTP 服务 | HTTP 9010 |
 | `micro-gathering` | 活动 HTTP 服务 | HTTP 9005 |
-| `micro-qa` | 问答 HTTP 服务 | HTTP 9003 |
 | `micro-manager` | 后台微服务网关 | HTTP 18086 |
+| `micro-spider` | 文章爬虫微服务 |  |
+| `micro-qa` | 问答 HTTP 服务 | HTTP 9003 |
 | `micro-recruit` | 招聘 HTTP 服务 | HTTP 9002 |
 | `micro-search` | 搜索 HTTP 服务 | HTTP 9007 |
 | `micro-sms` | 短信服务 | 9009 |
+| `micro-sso_server` | 单点登录服务 | 9007 |
 | `micro-spit` | 吐槽 HTTP 服务 | HTTP 9006 |
 | `micro-user` | 用户 HTTP 服务 | HTTP 9008 |
-| `micro-web` | 前台微服务网关 | HTTP  | |
-
-| `micro-article-crawler` | 文章爬虫微服务 |  |
 | `micro-user_crawler` | 用户爬虫微服务 |  |
-| `micro-ai` | 人工智能微服务 |  | |
-
-
-
-
-
-| `micro-doc` | 文档说明 |  |
-| `micro-common` | 公共工具类 |  |
+| `micro-web` | 前台微服务网关 | HTTP  | |
 
 
 
@@ -76,7 +85,21 @@ SpringBoot+SpringCloud+SpringData进行开发，前端技术采用Vue.js 。系�
 
 
 
-API文档
+
+
+
+
+## 启动说明
+1. 先启动micro_eureka
+2. 启动micro_user
+
+
+## Swagger 
+一个规范和完整的框架，用于生成、描述、调用和可视化 RESTful 风格的 Web 服务。总体目标是使客户端和文件系统作为服务器以同样的速度来更新。作用：1.接口的文档在线自动生成；2.接口功能测试。
+
+
+
+## API文档
 前后端约定的返回码列表：
 
 状态描述	返回码

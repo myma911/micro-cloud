@@ -1,22 +1,27 @@
 package cn.aaron911.micro.article.controller;
 
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import cn.aaron911.micro.common.exception.BaseException;
+import cn.aaron911.micro.common.exception.StateCodeEnum;
 import cn.aaron911.micro.common.result.Result;
-import cn.aaron911.micro.common.result.StatusCode;
 
 /**
- * 统一异常处理类
+ * 异常处理
  */
-@ControllerAdvice
+@RestControllerAdvice
 public class BaseExceptionHandler {
 	
+	@ExceptionHandler(value = BaseException.class)
+    public Result<StateCodeEnum> error(BaseException baseException){
+        return new Result<StateCodeEnum>(baseException.getStateCodeEnum());
+    }
+	
+
     @ExceptionHandler(value = Exception.class)
-    @ResponseBody
-    public Result error(Exception e){
-        e.printStackTrace();        
-        return new Result(false, StatusCode.ERROR, "执行出错");
+    public Result<StateCodeEnum> error(Exception e){
+        return new Result<StateCodeEnum>(StateCodeEnum.SYSTEM_ERROR);
     }
 }

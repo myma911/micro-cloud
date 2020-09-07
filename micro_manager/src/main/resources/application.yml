@@ -24,7 +24,7 @@ zuul:
         path: /friend/**
         serviceId: micro-friend
      micro-qa: #问答
-        path: /pa/**
+        path: /qa/**
         serviceId: micro-qa
      micro-recruit: #招聘
         path: /recruit/**
@@ -38,6 +38,13 @@ zuul:
      micro-user: #用户
         path: /user/**
         serviceId: micro-user
+        
+      
+      
+# SpringCloud：Zuul网关访问接口超时，type=Gateway Timeout, status=504  
+ribbon:
+  ReadTimeout: 120000  #请求处理的超时时间
+  ConnectTimeout: 30000  #请求连接的超时时间        
 
 
 jwt:
