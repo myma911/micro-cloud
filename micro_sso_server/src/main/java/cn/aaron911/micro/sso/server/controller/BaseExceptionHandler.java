@@ -15,16 +15,16 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 @Slf4j
 public class BaseExceptionHandler {
-	
-	@ExceptionHandler(value = BaseException.class)
+
+    @ExceptionHandler(value = BaseException.class)
     public Result<StateCodeEnum> error(BaseException baseException){
         return new Result<StateCodeEnum>(baseException.getStateCodeEnum());
     }
-	
+
 
     @ExceptionHandler(value = Exception.class)
     public Result<StateCodeEnum> error(Exception e){
-    	log.error(e.getMessage(), e);
+        log.error(e.getMessage(), e);
         return new Result<StateCodeEnum>(StateCodeEnum.SYSTEM_ERROR);
     }
 }

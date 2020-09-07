@@ -4,8 +4,6 @@ server:
     max-threads: 1000
     min-spare-threads: 30
   port: 9007
-  servlet:
-    context-path: /sso-server
     
     
 
@@ -17,22 +15,10 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
       enabled: true
-        
-  mvc:
-    static-path-pattern: /static/**
-  resources:
-    static-locations: classpath:/static/  
-    
-    
-  # freemarker  
-  freemarker: 
-    templateLoaderPath: classpath:/templates/
-    suffix: .ftl
-    charset: UTF-8
-    request-context-attribute: request
-    settings: 
-      number_format: '0.##########' 
-    
+  redis:
+    host: 192.168.3.193
+    port: 6379
+
   # Spring Cloud Sleuth 中集成 Zipkin ， 配置属性
 #  zipkin:
 #    base-url: http://localhost:9411
@@ -41,12 +27,10 @@ spring:
 #      probability: 1.0   
       
 
-# sso
-sso: 
-  redis: 
-    address: redis://192.168.3.193:6379
-    expire: 
-      minite: 1440
+# sso token保存时效
+sso:
+  expire:
+    minite: 1440
       
       
       

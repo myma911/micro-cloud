@@ -1,10 +1,12 @@
 package cn.aaron911.micro.sso.server.client;
 
+import cn.aaron911.micro.common.pojo.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import cn.aaron911.micro.common.result.Result;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @FeignClient注解用于指定从哪个服务中调用功能，注意 里面的名称与被调用的服务名保持一致，并且不能包含下划线
@@ -17,5 +19,5 @@ import cn.aaron911.micro.common.result.Result;
 public interface UserClient {
 
     @RequestMapping(value="/user/findUser", method = RequestMethod.GET)
-    public Result findUser(String username, String password);
+    Result<User> findUser(@RequestParam("username") String username, @RequestParam("password") String password);
 }

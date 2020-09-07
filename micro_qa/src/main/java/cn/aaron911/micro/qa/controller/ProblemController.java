@@ -1,5 +1,7 @@
 package cn.aaron911.micro.qa.controller;
 
+import cn.aaron911.micro.common.annotation.LoginUser;
+import cn.aaron911.micro.common.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -78,6 +80,7 @@ public class ProblemController {
     @ApiOperation("根据labelid查询waitlist")
     @GetMapping(value="/waitlist/{labelid}")
     public Result<PageResult<Problem>> findWaitListByLabelId(
+        @LoginUser User user,
 		@PathVariable String labelid,
 		@RequestParam int page,
 		@RequestParam int size 
@@ -99,7 +102,7 @@ public class ProblemController {
     }
 
     
-    //@Login
+    @Login
     @ApiOperation("查询")
     @GetMapping(value = "/label/{labelid}")
     public Result<?> findLabelById(@PathVariable String labelid){

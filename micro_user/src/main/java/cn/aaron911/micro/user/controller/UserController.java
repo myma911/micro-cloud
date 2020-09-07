@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiOperation;
 /**
  *
  */
-@Api
+@Api("用户接口")
 @RestController
 @RequestMapping("/user")
 public class UserController {

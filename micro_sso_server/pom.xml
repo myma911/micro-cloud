@@ -28,19 +28,18 @@
 			<artifactId>spring-boot-starter-freemarker</artifactId>
 		</dependency>
 
-		<!-- sso core -->
+
+		<!--springboot中的redis依赖-->
 		<dependency>
-			<groupId>cn.aaron911</groupId>
-			<artifactId>aaron911-sso-core</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
+
 
 		<!-- devtools -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
-			<scope>provided</scope>
-			<optional>true</optional>
 		</dependency>
 		
 		

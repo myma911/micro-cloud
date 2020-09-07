@@ -119,6 +119,8 @@
 		</dependency>
 
 
+
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -154,7 +156,6 @@
 					<source>1.8</source>
 					<target>1.8</target>
 					<encoding>UTF-8</encoding>
-					<verbal>true</verbal>
 				</configuration>
 			</plugin>
 		</plugins>
