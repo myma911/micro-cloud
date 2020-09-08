@@ -18,20 +18,11 @@ spring:
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect  #不加这句则默认为myisam引擎
-    
-    
-  
-  # Spring Cloud Sleuth 中集成 Zipkin ， 配置属性
-#  zipkin:
-#    base-url: http://localhost:9411
-#  sleuth:
-#    sampler:
-#      probability: 1.0
 
+  redis:
+    host: 192.168.3.193
+    port: 6379
 
-
-    
-    
     
 eureka:
   client:

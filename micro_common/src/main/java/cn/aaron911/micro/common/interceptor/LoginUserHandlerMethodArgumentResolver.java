@@ -28,23 +28,15 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer container,
                                   NativeWebRequest request, WebDataBinderFactory factory) throws Exception {
-        // 如果使用注入用户，必须先校验
-        // TO-DO.....
-
         //获取用户ID
-        Object object = request.getAttribute(AuthorizationInterceptor.USER_KEY, RequestAttributes.SCOPE_REQUEST);
+        Object object = request.getAttribute(AuthorizationInterceptor.USERINFOKEY, RequestAttributes.SCOPE_REQUEST);
         if(object == null){
             throw new LoginErrorException();
-            //return null;
         }
 
         // 从 存储中 获取用户信息   redis 还是数据库？
         // TO-DO....
-        User user = new User();
-        user.setId("123");
-        user.setNickname("测试");
-
-
+        User user = (User) object;
         return user;
     }
 }

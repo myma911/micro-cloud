@@ -1,5 +1,6 @@
 package cn.aaron911.micro.article.controller;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import cn.aaron911.micro.common.result.Result;
 /**
  *
  */
+@Api(tags = "文章")
 @RestController
 @RequestMapping("/article")
 public class ArticleController {

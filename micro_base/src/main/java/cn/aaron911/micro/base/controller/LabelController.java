@@ -3,6 +3,7 @@ package cn.aaron911.micro.base.controller;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,6 +28,7 @@ import cn.aaron911.micro.common.result.Result;
  * 因此，要想实现CORS进行跨域，需要服务器进行一些设置，同时前端也需要做一些配置和分析。本文简单的对服务端的配置和前端的一些设置进行分析。
  * 
  */
+@Api(tags = "label")
 @RestController
 @CrossOrigin
 @RequestMapping("/label")

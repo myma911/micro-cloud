@@ -1,31 +1,4 @@
-server:
-  port: 9010
 spring:
-  application:
-    name: micro-friend #指定服务名
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.3.193:3307/micro_friend?&useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
-    username: root
-    password: 123456
-  jpa:
-    database: MySQL
-    show-sql: true
-    
-    generate-ddl: true
-    
-    # 升级到Springboot2.0后，依然是使用jpa、Hibernate来操作mysql，发现Hibernate默认创建的表是myisam引擎，而不是innodb。添加下面的方言即可修改为innodb
-    hibernate:
-      ddl-auto: update
-      naming:
-        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect  #不加这句则默认为myisam引擎
-    
-    
-    
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:6868/eureka
-  instance:
-    prefer-ip-address: true
+  profiles:
+    active: dev
+    include: common

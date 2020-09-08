@@ -4,7 +4,10 @@ import cn.aaron911.micro.common.interceptor.AuthorizationInterceptor;
 import cn.aaron911.micro.common.interceptor.LoginUserHandlerMethodArgumentResolver;
 import cn.aaron911.micro.common.interceptor.TraceIDInterceptor;
 import cn.aaron911.micro.common.interceptor.UserAgentInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -15,19 +18,25 @@ import java.util.List;
 @Configuration
 public class WebMvcConfig extends WebMvcConfigurationSupport {
 
+	@Autowired
+	private RedisTemplate redisTemplate;
 
+	@Value("${custom.tokenName: token}")
+	private String tokenName;
 
+	@Value("${custom.expire.minite: 1440}")
+	private int ssoExpireMinite;
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		// plumelog 日志链路追踪traceID
 		registry.addInterceptor(new TraceIDInterceptor()).addPathPatterns("/**");
 
-		//用户信息解析
+		// 客户端浏览器信息解析
 		registry.addInterceptor(new UserAgentInterceptor()).addPathPatterns("/**");
 
 		// token 认证
-		registry.addInterceptor(new AuthorizationInterceptor()).addPathPatterns("/**");
+		registry.addInterceptor(new AuthorizationInterceptor(redisTemplate, tokenName, ssoExpireMinite)).addPathPatterns("/**");
 
 	}
 

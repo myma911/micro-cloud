@@ -56,11 +56,9 @@ micro_spit   吐槽
 | `micro-recruit` | 招聘 HTTP 服务 | HTTP 9002 |
 | `micro-search` | 搜索 HTTP 服务 | HTTP 9007 |
 | `micro-sms` | 短信服务 | 9009 |
-| `micro-sso_server` | 单点登录服务 | 9007 |
 | `micro-spit` | 吐槽 HTTP 服务 | HTTP 9006 |
 | `micro-user` | 用户 HTTP 服务 | HTTP 9008 |
-| `micro-user_crawler` | 用户爬虫微服务 |  |
-| `micro-web` | 前台微服务网关 | HTTP  | |
+
 
 
 

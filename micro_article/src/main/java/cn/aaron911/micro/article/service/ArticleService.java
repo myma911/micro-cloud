@@ -21,7 +21,7 @@ public class ArticleService {
     private ArticleDao articleDao;
 
     @Autowired
-    private RedisTemplate<String, Article> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 文章审核

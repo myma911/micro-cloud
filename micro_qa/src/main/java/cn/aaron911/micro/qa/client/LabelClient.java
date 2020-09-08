@@ -18,5 +18,5 @@ import cn.aaron911.micro.common.result.Result;
 public interface LabelClient {
 
     @RequestMapping(value="/label/{id}", method = RequestMethod.GET)
-    public Result findById(@PathVariable("id") String id);
+    Result findById(@PathVariable("id") String id);
 }

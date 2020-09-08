@@ -18,7 +18,7 @@ import cn.aaron911.micro.user.dao.UserDao;
 import cn.aaron911.micro.user.pojo.User;
 
 /**
- *
+ * UserService
  */
 @Service
 public class UserService {

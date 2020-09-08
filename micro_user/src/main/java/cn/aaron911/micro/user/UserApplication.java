@@ -12,7 +12,6 @@ import cn.aaron911.micro.common.util.IdWorker;
  */
 @SpringBootApplication
 @EnableEurekaClient
-
 public class UserApplication {
 
     public static void main(String[] args) {

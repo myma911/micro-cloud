@@ -20,6 +20,6 @@ public class ArticleApplication {
 
     @Bean
     public IdWorker idWorker() {
-        return new IdWorker(1,1);
+        return new IdWorker(1,4);
     }
 }

@@ -1,35 +1,41 @@
 server:
-  port: 9009
+  port: 9007
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 1000
+    min-spare-threads: 30
+
+
+
 spring:
   application:
-    name: micro-user
+    name: micro-user #指定服务名
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://192.168.3.193:3307/micro_user?&useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
-  jpa:
-    database: mysql
-    show-sql: true
-    generate-ddl: true
-    
-    # 升级到Springboot2.0后，依然是使用jpa、Hibernate来操作mysql，发现Hibernate默认创建的表是myisam引擎，而不是innodb。添加下面的方言即可修改为innodb
-    hibernate:
-      ddl-auto: update
-      naming:
-        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect  #不加这句则默认为myisam引擎
-    
-    
-    
+    jpa:
+      database: mysql
+      show-sql: true
+      generate-ddl: true
+
+      # 升级到Springboot2.0后，依然是使用jpa、Hibernate来操作mysql，发现Hibernate默认创建的表是myisam引擎，而不是innodb。添加下面的方言即可修改为innodb
+      hibernate:
+        ddl-auto: update
+        naming:
+          physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+      database-platform: org.hibernate.dialect.MySQL5InnoDBDialect  #不加这句则默认为myisam引擎
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+      enabled: true
   redis:
     host: 192.168.3.193
-    
-  rabbitmq:
-    host: 192.168.3.193
-    username: admin
-    password: admin
-    
+    port: 6379
+
+
 
 eureka:
   client:
@@ -37,3 +43,17 @@ eureka:
       defaultZone: http://localhost:6868/eureka
   instance:
     prefer-ip-address: true
+
+
+
+#Feign 本身支持Hystrix
+feign:
+  hystrix:
+    enabled: true
+
+
+# 日志收集
+plumelog:
+  appName: erp-api
+  redisHost: 192.168.3.193
+  redisPort: 6379

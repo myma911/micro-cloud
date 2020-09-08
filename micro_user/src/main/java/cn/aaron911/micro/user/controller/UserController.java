@@ -1,6 +1,5 @@
 package cn.aaron911.micro.user.controller;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,18 +16,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 /**
- *
+ * 用户接口
  */
-@Api("用户接口")
+@Api(tags = "用户接口")
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private HttpServletRequest request;
 
 
     /**
@@ -58,11 +54,7 @@ public class UserController {
      * @param id
      */
     @RequestMapping(value="/{id}",method= RequestMethod.DELETE)
-    public Result delete(@PathVariable String id ){
-        String token = (String) request.getAttribute("claims_admin");
-        if (token==null || "".equals(token)){
-            throw new RuntimeException("权限不足！");
-        }
+    public Result delete(@PathVariable String id){
         userService.deleteById(id);
         return Result.ok("删除成功");
     }
@@ -71,6 +63,7 @@ public class UserController {
      * 更新好友粉丝数和用户关注数
      * @return
      */
+    @ApiOperation("更新好友粉丝数和用户关注数")
     @RequestMapping(value = "/{userid}/{friendid}/{x}", method = RequestMethod.PUT)
     public void updatefanscountandfollowcount(@PathVariable String userid, @PathVariable String friendid, @PathVariable int x){
         userService.updatefanscountandfollowcount(x, userid, friendid);

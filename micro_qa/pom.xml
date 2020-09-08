@@ -36,13 +36,17 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
         
-        <!-- zipkin 链路跟踪 -->
-        <dependency>
+        <!-- zipkin 链路跟踪 依赖中含有 zipkin 依赖，没有配置 zipkin-server, 默认提交9411 会报错-->
+<!--        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-zipkin</artifactId>
+        </dependency>-->
+
+        <!--springboot中的redis依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-
-
 
 
         <dependency>

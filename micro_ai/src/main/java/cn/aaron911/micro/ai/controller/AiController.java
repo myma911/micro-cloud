@@ -2,6 +2,7 @@ package cn.aaron911.micro.ai.controller;
 
 import java.util.Map;
 
+import cn.aaron911.micro.ai.process.CnnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

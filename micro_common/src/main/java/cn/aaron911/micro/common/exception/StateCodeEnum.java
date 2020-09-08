@@ -33,6 +33,8 @@ public enum StateCodeEnum {
     TOKEN_EXPIRED_ERROR			(911011, "token超时错误"),
     
     TOKEN_INVALID				(911012, "token校验失败"),
+
+    REDIS_ERROR				    (911013, "Redis错误"),
     
     SYSTEM_ERROR    			(911999, "严重系统错误");
     

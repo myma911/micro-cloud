@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.aaron911.micro.common.annotation.Login;
-import cn.aaron911.micro.common.exception.AccessErrorException;
 import cn.aaron911.micro.common.result.PageResult;
 import cn.aaron911.micro.common.result.Result;
 import cn.aaron911.micro.qa.client.LabelClient;
@@ -21,6 +20,7 @@ import cn.aaron911.micro.qa.pojo.Problem;
 import cn.aaron911.micro.qa.service.ProblemService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 问答
@@ -80,7 +80,7 @@ public class ProblemController {
     @ApiOperation("根据labelid查询waitlist")
     @GetMapping(value="/waitlist/{labelid}")
     public Result<PageResult<Problem>> findWaitListByLabelId(
-        @LoginUser User user,
+        @ApiIgnore @LoginUser User user,
 		@PathVariable String labelid,
 		@RequestParam int page,
 		@RequestParam int size 

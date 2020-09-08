@@ -1,5 +1,6 @@
 package cn.aaron911.micro.article.controller;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import cn.aaron911.micro.common.result.Result;
  * 评论文章Controller
  * 
  */
+@Api(tags = "评论")
 @RestController
 @CrossOrigin
 @RequestMapping("/comment")
