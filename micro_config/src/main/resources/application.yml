@@ -8,12 +8,9 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/myma911/learngit.git #spring-cloud-config-server git 地址
-       
-       
-       
- 
-          
+          #spring-cloud-config-server git 地址
+          uri: https://github.com/myma911/learngit.git
+
   rabbitmq:
     host: 192.168.3.193
     
@@ -22,4 +19,4 @@ management:   #暴露触发消息总线的地址
   endpoints:
     web:
       exposure:
-        include: bus‐refresh
+        include: bus-refresh

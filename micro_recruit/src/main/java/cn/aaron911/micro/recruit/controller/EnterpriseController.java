@@ -1,5 +1,6 @@
 package cn.aaron911.micro.recruit.controller;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,6 +12,7 @@ import cn.aaron911.micro.recruit.service.EnterpriseService;
 /**
  * 招聘企业
  */
+@Api(tags = "招聘企业")
 @RestController
 @RequestMapping("/enterprise")
 public class EnterpriseController {

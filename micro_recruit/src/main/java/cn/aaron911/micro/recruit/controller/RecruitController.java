@@ -2,6 +2,7 @@ package cn.aaron911.micro.recruit.controller;
 
 import java.util.List;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,6 +15,7 @@ import cn.aaron911.micro.recruit.service.RecruitService;
 /**
  * 职位controller
  */
+@Api(tags = "职位")
 @RestController
 @RequestMapping("/recruit")
 public class RecruitController {
