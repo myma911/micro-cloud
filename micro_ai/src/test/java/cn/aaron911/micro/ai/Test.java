@@ -1,7 +1,6 @@
 package cn.aaron911.micro.ai;
 
-import org.wltea.analyzer.core.IKSegmenter;
-import org.wltea.analyzer.core.Lexeme;
+
 import java.io.IOException;
 import java.io.StringReader;
 
@@ -20,10 +19,6 @@ public class Test {
         
         // IKSegmenter 的第一个构造参数为StringReader类型 。 StringReader是装饰Reader的类，其用法是读取一个String字符串
         // IKSegmenter 的第二个构造参数userSmart 为切分粒度 true表示最大切分 false表示最细切分
-        IKSegmenter ik=new IKSegmenter(sr, true);
-        Lexeme lex=null;
-        while((lex=ik.next())!=null){
-            System.out.print(lex.getLexemeText()+" ");
-        }
+
     }
 }

@@ -1,5 +1,6 @@
 package cn.aaron911.micro.search.controller;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import cn.aaron911.micro.search.service.ArticleSerachService;
 /**
  * 文章搜索controller
  */
+@Api(tags = "文章搜索")
 @RestController
 @RequestMapping("/article")
 public class ArticleSearchController {

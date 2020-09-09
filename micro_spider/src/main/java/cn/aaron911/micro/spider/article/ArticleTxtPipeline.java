@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import cn.aaron911.micro.common.util.HTMLUtil;
-import cn.aaron911.micro.common.util.IKUtil;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
@@ -39,7 +38,7 @@ public class ArticleTxtPipeline  implements Pipeline {
         try {
             //将标题+正文分词后保存到相应的文件夹
             PrintWriter printWriter = new PrintWriter(new File(dataPath+"/"+channelId+ "/"+UUID.randomUUID()+".txt"));
-            printWriter.print(IKUtil.split(title+" "+content," "));
+           // printWriter.print(IKUtil.split(title+" "+content," "));
             printWriter.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

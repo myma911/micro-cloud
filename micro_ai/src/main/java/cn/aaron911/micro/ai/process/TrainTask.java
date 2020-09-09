@@ -13,10 +13,6 @@ public class TrainTask {
     private Word2VecService word2VecService;
     
     
-    @Autowired
-    private CnnService cnnService;
-    
-    
     /**
      * 训练模型
      */
@@ -31,7 +27,7 @@ public class TrainTask {
         System.out.println("构建词向量模型结束");
         
         System.out.println("开始构建神经网络卷积模型");
-        cnnService.build();
+        //cnnService.build();
         System.out.println("构建神经网络卷积模型结束");
     }
 }

@@ -1,0 +1,22 @@
+server:
+  port: 9006
+spring:
+  application:
+    name: micro-spit #吐槽服务
+  data:
+    mongodb:
+      host: 192.168.3.193
+      database: spit
+      
+  # 控制不能重复点赞，通过redis控制用户不能重复点赞
+  redis:
+    host: 192.168.3.193
+
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:6868/eureka
+  instance:
+    prefer-ip-address: true

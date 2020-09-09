@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import cn.aaron911.micro.common.util.IdWorker;
 
 /**
- *
+ * 搜索微服务
  */
 @SpringBootApplication
 @EnableEurekaClient
@@ -20,6 +20,6 @@ public class SearchApplication {
 
     @Bean
     public IdWorker idWorker() {
-        return new IdWorker(1,1);
+        return new IdWorker(1,6);
     }
 }

@@ -1,5 +1,6 @@
 package cn.aaron911.micro.spit.controller;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,9 +15,12 @@ import cn.aaron911.micro.common.result.Result;
 import cn.aaron911.micro.spit.pojo.Spit;
 import cn.aaron911.micro.spit.service.SpitService;
 
+import java.util.List;
+
 /**
  * 吐槽 HTTP 服务
  */
+@Api(tags = "吐槽 HTTP 服务")
 @RestController
 @RequestMapping("/spit")
 public class SpitController {
@@ -29,7 +33,9 @@ public class SpitController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Result findAll(){
-        return Result.ok("查询成功", spitService.findAll());
+        final List<Spit> all = spitService.findAll();
+
+        return Result.ok("查询成功", all);
     }
 
     @RequestMapping(value = "/{spitId}", method = RequestMethod.GET)

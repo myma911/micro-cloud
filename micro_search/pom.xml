@@ -12,6 +12,7 @@
 	<artifactId>micro_search</artifactId>
 
 	<dependencies>
+
 		<dependency>
 			<groupId>cn.aaron911</groupId>
 			<artifactId>micro_common</artifactId>
@@ -19,43 +20,17 @@
 		</dependency>
 
 
-		<!-- 选择elasticsearch-rest-high-level-client方式来集成，要排除掉elasticsearch、elasticsearch-rest-client， 
-			这里没有选择spring-boot-starter-data-elasticsearch，因为最新版的starter现在依然是6.x版本号，并没有集成elasticsearch7.4.0，导致使用过程中有很多版本冲突 -->
-		<dependency> 
-			<groupId>org.springframework.data</groupId> 
-			<artifactId>spring-data-elasticsearch</artifactId> 
-		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
 
-		<!-- <dependency>
-			<groupId>org.elasticsearch.client</groupId>
-			<artifactId>elasticsearch-rest-high-level-client</artifactId>
-			<version>7.4.2</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.elasticsearch</groupId>
-					<artifactId>elasticsearch</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.elasticsearch.client</groupId>
-					<artifactId>elasticsearch-rest-client</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>org.elasticsearch.client</groupId>
-			<artifactId>elasticsearch-rest-client</artifactId>
-			<version>7.4.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.elasticsearch</groupId>
-			<artifactId>elasticsearch</artifactId>
-			<version>7.4.2</version>
-		</dependency> -->
 
 
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
+
 	</dependencies>
 </project>
