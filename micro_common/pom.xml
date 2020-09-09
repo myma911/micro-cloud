@@ -11,26 +11,49 @@
 
 	<artifactId>micro_common</artifactId>
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
 
 		<!-- 日志收集 -->
 		<dependency>
 			<groupId>com.plumelog</groupId>
 			<artifactId>plumelog-logback</artifactId>
-			<version>3.1</version>
 		</dependency>
 
 		<!-- plumelog 链路追踪 -->
 		<dependency>
 			<groupId>com.plumelog</groupId>
 			<artifactId>plumelog-trace</artifactId>
-			<version>3.1.2</version>
 		</dependency>
 
+		<!--spring-boot-admin-starter-client-->
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-client</artifactId>
+		</dependency>
 
 		<!--springboot中的redis依赖-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+
+		<!--swagger2-->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+		</dependency>
+
+		<!-- spring cloud 链路追踪 -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-sleuth</artifactId>
 		</dependency>
 	</dependencies>
 </project>
