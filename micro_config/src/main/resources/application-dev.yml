@@ -1,0 +1,38 @@
+server:
+  port: 12000
+  
+spring:
+  application:
+    name: micro-config
+  cloud:
+    config:
+      server:
+        git:
+          #spring-cloud-config-server git 地址
+          uri: https://github.com/myma911/learngit.git
+
+  rabbitmq:
+    host: 192.168.3.193
+    username: admin
+    password: admin
+
+
+
+#修改服务器中的配置并没有更新立刻到工程，只有重新启动程序才会读取配置。 在不重启微服务的情况下更新配置如何来实现呢?使用SpringCloudBus来实现配置的自动更新   
+management:   #暴露触发消息总线的地址
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh
+
+
+
+
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:6868/eureka
+  instance:
+    prefer-ip-address: true

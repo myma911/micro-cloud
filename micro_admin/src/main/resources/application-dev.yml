@@ -1,16 +1,12 @@
 server:
-  port: 9008
+  port: 6869
 spring:
   application:
-    name: micro-search
+    name: micro-admin #spring 服务监控中心
+
   redis:
     host: 192.168.3.193
-  elasticsearch:
-    rest:
-      uris: http://192.168.3.193:9200
 
-  main:
-    allow-bean-definition-overriding: true
 
 
 

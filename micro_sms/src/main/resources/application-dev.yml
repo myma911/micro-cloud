@@ -13,3 +13,13 @@ aliyun:
     accessKeySecret: 123
     template_code: 123
     sign_name: 自己做短信测试
+
+
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:6868/eureka
+  instance:
+    prefer-ip-address: true

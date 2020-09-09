@@ -34,7 +34,11 @@ spring:
   # 消息总线 使用      
   rabbitmq:
     host:  192.168.3.193
-    
+    username: admin
+    password: admin
+
+
+
 eureka:
   client:
     service-url:

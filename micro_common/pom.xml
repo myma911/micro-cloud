@@ -12,12 +12,20 @@
 	<artifactId>micro_common</artifactId>
 	<dependencies>
 
-		<!-- IK分词器 -->
-<!--		<dependency>
-			<groupId>com.janeluo</groupId>
-			<artifactId>ikanalyzer</artifactId>
-			<version>2012_u6</version>
-		</dependency>-->
+		<!-- 日志收集 -->
+		<dependency>
+			<groupId>com.plumelog</groupId>
+			<artifactId>plumelog-logback</artifactId>
+			<version>3.1</version>
+		</dependency>
+
+		<!-- plumelog 链路追踪 -->
+		<dependency>
+			<groupId>com.plumelog</groupId>
+			<artifactId>plumelog-trace</artifactId>
+			<version>3.1.2</version>
+		</dependency>
+
 
 		<!--springboot中的redis依赖-->
 		<dependency>

@@ -25,6 +25,7 @@
 		<module>micro_qa</module>
 		<module>micro_recruit</module>
 		<module>micro_user</module>
+		<module>micro_admin</module>
 	</modules>
 
 	<name>micro-cloud</name>
@@ -54,6 +55,28 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+
+			<!-- 日志收集 -->
+			<dependency>
+				<groupId>com.plumelog</groupId>
+				<artifactId>plumelog-logback</artifactId>
+				<version>3.1</version>
+			</dependency>
+
+			<!-- plumelog 链路追踪 -->
+			<dependency>
+				<groupId>com.plumelog</groupId>
+				<artifactId>plumelog-trace</artifactId>
+				<version>3.1.2</version>
+			</dependency>
+
+			<!--spring-boot-admin-starter-client-->
+			<dependency>
+				<groupId>de.codecentric</groupId>
+				<artifactId>spring-boot-admin-starter-client</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
@@ -86,21 +109,11 @@
 		</dependency>
 
 
-		<!-- 日志收集 -->
+
 		<dependency>
-			<groupId>com.plumelog</groupId>
-			<artifactId>plumelog-logback</artifactId>
-			<version>3.1</version>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
-
-		<!-- plumelog 链路追踪 -->
-		<dependency>
-			<groupId>com.plumelog</groupId>
-			<artifactId>plumelog-trace</artifactId>
-			<version>3.1.2</version>
-		</dependency>
-
-
 
 		<!-- spring cloud 链路追踪 -->
 		<dependency>
@@ -117,7 +130,12 @@
 		</dependency>
 
 
-
+		<!--spring-boot-admin-starter-client-->
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-client</artifactId>
+			<version>2.3.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>

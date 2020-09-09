@@ -18,6 +18,12 @@
             <groupId>cn.aaron911</groupId>
             <artifactId>micro_common</artifactId>
             <version>${project.parent.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-data-redis</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     
     	<!-- 开发短信发送微服务，从rabbitMQ中提取消息，调用阿里大于短信接口实现短信发送 --> 

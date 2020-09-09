@@ -25,10 +25,7 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
+
         
         <!-- Feign实现服务间的调用，问答微服务调用基础微服务的方法 -->
         <dependency>

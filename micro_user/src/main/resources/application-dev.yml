@@ -5,8 +5,6 @@ server:
     max-threads: 1000
     min-spare-threads: 30
 
-
-
 spring:
   application:
     name: micro-user #指定服务名
@@ -35,6 +33,13 @@ spring:
     host: 192.168.3.193
     port: 6379
 
+  # 队列消息
+  rabbitmq:
+    host:  192.168.3.193
+    username: admin
+    password: admin
+
+
 
 
 eureka:
@@ -54,6 +59,6 @@ feign:
 
 # 日志收集
 plumelog:
-  appName: erp-api
+  appName: micro_user
   redisHost: 192.168.3.193
   redisPort: 6379

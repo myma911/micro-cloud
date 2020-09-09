@@ -4,3 +4,10 @@ custom:
   security: huoxianzhineng
   expire:
     minite: 1440  # token保存分钟
+
+#admin暴露的接口规则，*表示所有
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
