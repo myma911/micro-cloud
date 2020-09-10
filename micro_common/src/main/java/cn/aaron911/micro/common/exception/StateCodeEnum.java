@@ -35,6 +35,10 @@ public enum StateCodeEnum {
     TOKEN_INVALID				(911012, "token校验失败"),
 
     REDIS_ERROR				    (911013, "Redis错误"),
+
+    INIT_ERROR				    (911101, "初始化错误"),
+
+    IM_PUSH_ERROR               (911102, "IM 消息发送错误"),
     
     SYSTEM_ERROR    			(911999, "严重系统错误");
     
@@ -53,5 +57,9 @@ public enum StateCodeEnum {
 
     public String getMessage() {
         return message;
+    }
+
+    public void setMessage(String message){
+        this.message = message;
     }
 }

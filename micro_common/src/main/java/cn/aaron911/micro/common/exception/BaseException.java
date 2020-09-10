@@ -25,10 +25,31 @@ public class BaseException extends RuntimeException{
 		this.stateCodeEnum = stateCodeEnum;
 	}
 
+	/**
+	 * 自定义message
+	 */
+	public BaseException(StateCodeEnum stateCodeEnum, String message) {
+		super(message);
+		this.code = stateCodeEnum.getCode();
+		this.msg = message;
+		this.stateCodeEnum = stateCodeEnum;
+		this.stateCodeEnum.setMessage(message);
+	}
+
+	/**
+	 * 自定义message, throwable
+	 */
+	public BaseException(StateCodeEnum stateCodeEnum, String message, Throwable throwable) {
+		super(message, throwable);
+		this.code = stateCodeEnum.getCode();
+		this.msg = message;
+		this.stateCodeEnum = stateCodeEnum;
+		this.stateCodeEnum.setMessage(message);
+	}
+
 	public StateCodeEnum getStateCodeEnum() {
 		return stateCodeEnum;
 	}
-
 
 	public int getCode() {
 		return code;

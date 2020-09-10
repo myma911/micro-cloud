@@ -9,7 +9,6 @@
 	<packaging>pom</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<modules>
-		<module>micro_ai</module>
 		<module>micro_article</module>
 		<module>micro_base</module>
 		<module>micro_common</module>
@@ -26,6 +25,7 @@
 		<module>micro_recruit</module>
 		<module>micro_user</module>
 		<module>micro_admin</module>
+		<module>micro_im</module>
 	</modules>
 
 	<name>micro-cloud</name>
