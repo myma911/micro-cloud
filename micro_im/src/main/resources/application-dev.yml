@@ -22,15 +22,17 @@ spring:
 
 
 im:
-  port: 2000
-  robotType: d   #(tuling/moli)
-  robotKey:
-  robotSecret:
+  port: 2020
+  robotType: tuling   #(tuling/moli)
+  robotApiUrl: http://openapi.tuling123.com/openapi/api/v2
+  robotKey: 27938185f35541caad6e97fdc216d6e8
+  robotSecret: b0fce338743ef268
+  #tuling/27938185f35541caad6e97fdc216d6e8/b0fce338743ef268
 
 
 
 
-    
+
 eureka:
   client:
     service-url:

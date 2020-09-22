@@ -1,47 +1,41 @@
-/**
- ***************************************************************************************
- *  @Author     1044053532@qq.com   
- *  @License    http://www.apache.org/licenses/LICENSE-2.0
- ***************************************************************************************
- */
 package cn.aaron911.micro.im.server.session;
 
 import cn.aaron911.micro.im.server.model.MessageWrapper;
 import cn.aaron911.micro.im.server.model.Session;
+import com.corundumstudio.socketio.SocketIOClient;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.util.Set;
 
-import org.directwebremoting.ScriptSession;
 
- 
+/**
+ * session 集合管理
+ */
 public interface ISessionManager {
 
     /**
-     * 添加指定session
+     * 添加session
      *
-     * @param session
      */
     void addSession(Session session);
 
+    /**
+     * 更新session
+     *
+     */
     void updateSession(Session session);
  
 
     /**
      * 删除指定session
      *
-     * @param sessionId
      */
      void removeSession(String sessionId);
 
     /**
      * 删除指定session
-     * 
      *
-     * @param sessionId
-     * @param nid  is socketid 
      */
-     void removeSession(String sessionId, String nid);
 
     /**
      * 根据指定sessionId获取session
@@ -71,10 +65,22 @@ public interface ISessionManager {
      * @return
      */
     int getSessionCount();
- 
-    Session createSession(MessageWrapper wrapper, ChannelHandlerContext ctx);
-    
-    Session createSession(ScriptSession scriptSession, String sessionid);
-    
+
+    /**
+     * 通过netty 创建的用户连接
+     * @param wrapper
+     * @param ctx
+     * @return
+     */
+    Session createSession(String userId, MessageWrapper wrapper, ChannelHandlerContext ctx);
+
+    /**
+     * 通过websocket创建的用户连接
+     * @param userId
+     * @param client
+     */
+    Session createSession(String userId, SocketIOClient client);
+
     boolean exist(String sessionId) ;
+
 }

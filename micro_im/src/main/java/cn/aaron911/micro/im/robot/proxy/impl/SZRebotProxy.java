@@ -25,27 +25,27 @@ public class SZRebotProxy implements IRobotProxy {
         log.info("SZRebot reply user -->" + user + "--mes:" + content);
         try {
             String message = god(content);
-            MessageProto.Model.Builder result = MessageProto.Model.newBuilder();
-            result.setCmd(Constants.CmdType.MESSAGE);
-            result.setMsgtype(Constants.ProtobufType.REPLY);
-            result.setSender(Constants.ImserverConfig.REBOT_SESSIONID);
-            result.setReceiver(user);
-            result.setTimeStamp(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-            MessageBodyProto.MessageBody.Builder msgbody = MessageBodyProto.MessageBody.newBuilder();
-            msgbody.setContent(message);
-            result.setContent(msgbody.build().toByteString());
-            return new MessageWrapper(MessageWrapper.MessageProtocol.REPLY, Constants.ImserverConfig.REBOT_SESSIONID, user, result.build());
+            MessageProto messageProto = new MessageProto();
+            messageProto.setCmd(Constants.CmdType.MESSAGE);
+            messageProto.setMsgtype(Constants.ProtobufType.REPLY);
+            messageProto.setSender(Constants.ImserverConfig.REBOT_SESSIONID);
+            messageProto.setReceiver(user);
+            messageProto.setTimeStamp(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            MessageBodyProto messageBodyProto = new MessageBodyProto();
+            messageBodyProto.setContent(message);
+            messageProto.setMessageBody(messageBodyProto);
+            return new MessageWrapper(MessageWrapper.MessageProtocol.REPLY, Constants.ImserverConfig.REBOT_SESSIONID, user, messageProto);
         } catch (Exception e) {
             log.error("", e);
         }
-        MessageProto.Model.Builder result = MessageProto.Model.newBuilder();
-        return new MessageWrapper(MessageWrapper.MessageProtocol.REPLY, Constants.ImserverConfig.REBOT_SESSIONID, user, result.build());
+        MessageProto messageProto = new MessageProto();
+        return new MessageWrapper(MessageWrapper.MessageProtocol.REPLY, Constants.ImserverConfig.REBOT_SESSIONID, user, messageProto);
     }
 
 
     private static String god(String content) {
         content = content.replaceAll("吗", "");
-        content = content.replaceAll("?", "!");
+        content = content.replaceAll("\\?", "!");
         return content;
     }
 }

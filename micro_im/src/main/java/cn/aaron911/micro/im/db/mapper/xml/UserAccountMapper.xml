@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.aaron911.micro.im.db.mapper.UserAccountMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.aaron911.micro.im.db.entity.UserAccount">
+        <id column="id" property="id" />
+        <result column="account" property="account" />
+        <result column="password" property="password" />
+        <result column="disablestate" property="disablestate" />
+        <result column="isdel" property="isdel" />
+        <result column="createdate" property="createdate" />
+        <result column="updatedate" property="updatedate" />
+        <result column="updateuser" property="updateuser" />
+        <result column="user_info" property="userInfo" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, account, password, disablestate, isdel, createdate, updatedate, updateuser, user_info
+    </sql>
+
+</mapper>

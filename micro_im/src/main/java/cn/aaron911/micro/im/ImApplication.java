@@ -1,6 +1,7 @@
 package cn.aaron911.micro.im;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -16,9 +17,11 @@ public class ImApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
         // 设置为不以web方式启动
-        new SpringApplicationBuilder(ImApplication.class)
-                .web(WebApplicationType.NONE)
-                .run(args);
+//        new SpringApplicationBuilder(ImApplication.class)
+//                .web(WebApplicationType.NONE)
+//                .run(args);
+
+        SpringApplication.run(ImApplication.class, args);
 
     }
 

@@ -35,12 +35,11 @@ public class ImServerHandler  extends ChannelInboundHandlerAdapter{
     	 String sessionId = ctx.channel().attr(Constants.SessionConfig.SERVER_SESSION_ID).get();
     	//发送心跳包
     	if (o instanceof IdleStateEvent && ((IdleStateEvent) o).state().equals(IdleState.WRITER_IDLE)) {
-		      //ctx.channel().attr(Constants.SessionConfig.SERVER_SESSION_HEARBEAT).set(System.currentTimeMillis());
 			  if(StringUtils.isNotEmpty(sessionId)){
-				 MessageProto.Model.Builder builder = MessageProto.Model.newBuilder();
-				 builder.setCmd(Constants.CmdType.HEARTBEAT);
-			     builder.setMsgtype(Constants.ProtobufType.SEND);
-				 ctx.channel().writeAndFlush(builder);
+				 MessageProto messageProto = new MessageProto();
+                  messageProto.setCmd(Constants.CmdType.HEARTBEAT);
+                  messageProto.setMsgtype(Constants.ProtobufType.SEND);
+				 ctx.channel().writeAndFlush(messageProto);
 			  } 
  			 log.debug(IdleState.WRITER_IDLE +"... from "+sessionId+"-->"+ctx.channel().remoteAddress()+" nid:" +ctx.channel().id().asShortText());
  	    } 
@@ -63,8 +62,8 @@ public class ImServerHandler  extends ChannelInboundHandlerAdapter{
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object o) {
         try {
-            if (o instanceof MessageProto.Model) {
-                MessageProto.Model message = (MessageProto.Model) o;
+            if (o instanceof MessageProto) {
+                MessageProto message = (MessageProto) o;
                 String sessionId = connertor.getChannelSessionId(ctx);
                 // inbound
                 if (message.getMsgtype() == Constants.ProtobufType.SEND) {

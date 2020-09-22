@@ -1,28 +1,16 @@
 package cn.aaron911.micro.im.db.service;
 
-
-import cn.aaron911.micro.im.db.entity.UserInfoEntity;
-
-import java.util.List;
-import java.util.Map;
+import cn.aaron911.micro.im.db.entity.UserInfo;
+import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
- * 用户信息表
- * 
+ * <p>
+ * 用户信息表 服务类
+ * </p>
+ *
+ * @author Aaron
+ * @since 2020-09-11
  */
-public interface IUserInfoService {
-	
-	UserInfoEntity queryObject(Long id);
-	
-	List<UserInfoEntity> queryList(Map<String, Object> map);
-	
-	int queryTotal(Map<String, Object> map);
-	
-	void save(UserInfoEntity userInfo);
-	
-	int update(UserInfoEntity userInfo);
-	
-	int delete(Long id);
-	
-	int deleteBatch(Long[] ids);
+public interface IUserInfoService extends IService<UserInfo> {
+
 }

@@ -1,9 +1,3 @@
-/**
- ***************************************************************************************
- *  @Author     1044053532@qq.com   
- *  @License    http://www.apache.org/licenses/LICENSE-2.0
- ***************************************************************************************
- */
 package cn.aaron911.micro.im.constant;
 
 import io.netty.util.AttributeKey;
@@ -12,76 +6,135 @@ import com.googlecode.protobuf.format.JsonFormat;
 
 public class Constants {
 
-	public static interface WebSite{
-		public static final int SUCCESS = 0;
-		public static final int ERROR = -1;
-	}
-	
-	public static interface ViewTemplateConfig{
-		//public static String template = "pctemplate/";
-		//public static String mobiletemplate = "mobiletemplate/";
-	}
-	
-	public static interface NotifyConfig{
-		public static final int NOTIFY_SUCCESS = 1;
-	    public static final int NOTIFY_FAILURE = 0;
-	    public static final int NOTIFY_NO_SESSION = 2;
-	}
-   
-    
-    
-    public static interface ImserverConfig{
-    	//连接空闲时间
-      	public static final int READ_IDLE_TIME = 60;//秒
-      	//发送心跳包循环时间
-      	public static final int WRITE_IDLE_TIME = 40;//秒
-        //心跳响应 超时时间
-      	public static final int PING_TIME_OUT = 70; //秒   需大于空闲时间
-      	
-        // 最大协议包长度
-        public static final int MAX_FRAME_LENGTH = 1024 * 10; // 10k
-        //
-        public static final int MAX_AGGREGATED_CONTENT_LENGTH = 65536;
-        
-        public static final String REBOT_SESSIONID="0";//机器人SessionID
-        
-        public static final int WEBSOCKET = 1;//websocket标识
-        
-        public static final int SOCKET =0;//socket标识
-        
-        public static final int DWR = 2;//dwr标识
-        
-     
+    public interface WebSite {
+        int SUCCESS = 0;
+        int ERROR = -1;
     }
-    
-    public static interface DWRConfig{
-    	   public static final String DWR_SCRIPT_FUNCTIONNAME="showMessage";//dwr显示消息的script方法名
-    	   public static final String SS_KEY = "scriptSession_Id";  
-    	   public static final String BROWSER = "browser";  
-    	   public static final String BROWSER_VERSION = "browserVersion";  
-    	   public static final JsonFormat JSONFORMAT =new JsonFormat();
+
+    public interface ViewTemplateConfig {
+        String template = "pctemplate/";
+        String mobiletemplate = "mobiletemplate/";
     }
-    
-    public static interface SessionConfig{
-    	 public static final String SESSION_KEY= "account" ;
-    	 public static final AttributeKey<String> SERVER_SESSION_ID = AttributeKey.valueOf(SESSION_KEY);
-    	 public static final AttributeKey SERVER_SESSION_HEARBEAT = AttributeKey.valueOf("heartbeat");
+
+    public interface NotifyConfig {
+        int NOTIFY_FAILURE = 0;
+        int NOTIFY_SUCCESS = 1;
+        int NOTIFY_NO_SESSION = 2;
     }
-    
-    public static interface ProtobufType{
-    	 byte SEND = 1; //请求
-    	 byte RECEIVE = 2; //接收
-    	 byte NOTIFY = 3; //通知
-    	 byte REPLY = 4; //回复
-	}
-   
-    public static interface CmdType{
-	   	 byte BIND = 1; //绑定  
-	   	 byte HEARTBEAT = 2; //心跳 
-	   	 byte ONLINE = 3; //上线
-	   	 byte OFFLINE = 4; //下线 
-	   	 byte MESSAGE = 5; //消息
-	   	 byte RECON = 6; //重连
-	}
-  
+
+
+    public interface ImserverConfig {
+        /**
+         * 连接空闲时间(秒)
+         */
+        int READ_IDLE_TIME = 60;
+
+        /**
+         * 发送心跳包循环时间(秒)
+         */
+        int WRITE_IDLE_TIME = 40;
+
+        /**
+         * 心跳响应 超时时间(秒   需大于空闲时间)
+         */
+        int PING_TIME_OUT = 70;
+
+        /**
+         * 最大协议包长度(10k)
+         */
+        int MAX_FRAME_LENGTH = 1024 * 10;
+
+        int MAX_AGGREGATED_CONTENT_LENGTH = 65536;
+
+        /**
+         * 机器人SessionID
+         */
+        String REBOT_SESSIONID = "0";
+
+        /**
+         * websocket标识
+         */
+        int WEBSOCKET = 1;
+
+        /**
+         * socket标识
+         */
+        int SOCKET = 0;
+
+
+    }
+
+    /**
+     * 2020.9.22 去掉
+     */
+    @Deprecated
+    public interface DWRConfig {
+        String DWR_SCRIPT_FUNCTIONNAME = "showMessage";//dwr显示消息的script方法名
+        String SS_KEY = "scriptSession_Id";
+        String BROWSER = "browser";
+        String BROWSER_VERSION = "browserVersion";
+        JsonFormat JSONFORMAT = new JsonFormat();
+    }
+
+    public interface SessionConfig {
+        String SESSION_KEY = "account";
+        AttributeKey<String> SERVER_SESSION_ID = AttributeKey.valueOf(SESSION_KEY);
+        AttributeKey SERVER_SESSION_HEARBEAT = AttributeKey.valueOf("heartbeat");
+    }
+
+    public interface ProtobufType {
+
+        /**
+         * 请求
+         */
+        byte SEND = 1;
+
+        /**
+         * 接收
+         */
+        byte RECEIVE = 2;
+
+        /**
+         * 通知
+         */
+        byte NOTIFY = 3;
+
+        /**
+         * 回复
+         */
+        byte REPLY = 4;
+    }
+
+    public interface CmdType {
+        /**
+         * 绑定
+         */
+        byte BIND = 1;
+
+        /**
+         * 心跳
+         */
+        byte HEARTBEAT = 2;
+
+        /**
+         * 上线
+         */
+        byte ONLINE = 3;
+
+        /**
+         * 下线
+         */
+        byte OFFLINE = 4;
+
+        /**
+         * 消息
+         */
+        byte MESSAGE = 5;
+
+        /**
+         * 重连
+         */
+        byte RECON = 6;
+    }
+
 }

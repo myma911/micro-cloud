@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.aaron911.micro.im.db.mapper.UserMessageMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.aaron911.micro.im.db.entity.UserMessage">
+        <id column="id" property="id" />
+        <result column="senduser" property="senduser" />
+        <result column="receiveuser" property="receiveuser" />
+        <result column="groupid" property="groupid" />
+        <result column="isread" property="isread" />
+        <result column="type" property="type" />
+        <result column="content" property="content" />
+        <result column="createuser" property="createuser" />
+        <result column="createdate" property="createdate" />
+        <result column="updatedate" property="updatedate" />
+        <result column="avatar" property="avatar" />
+        <result column="sendusername" property="sendusername" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, senduser, receiveuser, groupid, isread, type, content, createuser, createdate, updatedate, avatar, sendusername
+    </sql>
+
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.aaron911.micro.im.db.mapper.UserInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.aaron911.micro.im.db.entity.UserInfo">
+        <id column="id" property="id" />
+        <result column="uid" property="uid" />
+        <result column="deptid" property="deptid" />
+        <result column="name" property="name" />
+        <result column="nickname" property="nickname" />
+        <result column="sex" property="sex" />
+        <result column="birthday" property="birthday" />
+        <result column="cardid" property="cardid" />
+        <result column="signature" property="signature" />
+        <result column="school" property="school" />
+        <result column="education" property="education" />
+        <result column="address" property="address" />
+        <result column="phone" property="phone" />
+        <result column="email" property="email" />
+        <result column="remark" property="remark" />
+        <result column="profilephoto" property="profilephoto" />
+        <result column="createdate" property="createdate" />
+        <result column="createuser" property="createuser" />
+        <result column="updatedate" property="updatedate" />
+        <result column="updateuser" property="updateuser" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, uid, deptid, name, nickname, sex, birthday, cardid, signature, school, education, address, phone, email, remark, profilephoto, createdate, createuser, updatedate, updateuser
+    </sql>
+
+</mapper>

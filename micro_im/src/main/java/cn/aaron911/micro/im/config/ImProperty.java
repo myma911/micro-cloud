@@ -12,7 +12,13 @@ public class ImProperty {
 	/**
 	 * server 默认端口号
 	 */
-	private int port = 2000;
+	private int port = 2020;
+
+	/**
+	 * webSocketPort 默认端口号
+	 */
+	private int webSocketPort = 2030;
+
 
 	/**
 	 * 图灵或者茉莉机器人（tuling/moli）

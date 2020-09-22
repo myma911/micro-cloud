@@ -1,6 +1,7 @@
 package cn.aaron911.micro.im.server;
 
 import cn.aaron911.micro.common.exception.InitErrorException;
+import cn.aaron911.micro.im.config.ImProperty;
 import cn.aaron911.micro.im.constant.Constants;
 import cn.aaron911.micro.im.server.connector.ImConnertor;
 import cn.aaron911.micro.im.server.model.proto.MessageProto;
@@ -25,20 +26,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class ImServer implements InitializingBean, DisposableBean {
-    private ProtobufDecoder decoder = new ProtobufDecoder(MessageProto.Model.getDefaultInstance());
+    //private ProtobufDecoder decoder = new ProtobufDecoder(new MessageProto());
     private ProtobufEncoder encoder = new ProtobufEncoder();
     private final EventLoopGroup bossGroup = new NioEventLoopGroup();
     private final EventLoopGroup workerGroup = new NioEventLoopGroup();
     private Channel channel;
-
-    @Autowired
-    private ServerProperties serverProperties;
 
     @Autowired
     private IMessageProxy messageProxy;
@@ -46,10 +43,13 @@ public class ImServer implements InitializingBean, DisposableBean {
     @Autowired
     private ImConnertor imConnertor;
 
+    @Autowired
+    private ImProperty imProperty;
+
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        int port = serverProperties.getPort();
+        int port = imProperty.getPort();
         log.info("start qiqiim server ...");
         // Server 服务启动
         ServerBootstrap bootstrap = new ServerBootstrap();
@@ -61,7 +61,7 @@ public class ImServer implements InitializingBean, DisposableBean {
             public void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
                 pipeline.addLast("frameDecoder", new ProtobufVarint32FrameDecoder());
-                pipeline.addLast("decoder", decoder);
+                //pipeline.addLast("decoder", decoder);
                 pipeline.addLast("frameEncoder", new ProtobufVarint32LengthFieldPrepender());
                 pipeline.addLast("encoder",encoder);
                 pipeline.addLast(new IdleStateHandler(Constants.ImserverConfig.READ_IDLE_TIME,Constants.ImserverConfig.WRITE_IDLE_TIME,0));

@@ -5,7 +5,13 @@ import cn.aaron911.micro.im.server.model.proto.MessageProto;
 
 public interface IMessageProxy {
 
-    MessageWrapper convertToMessageWrapper(String sessionId, MessageProto.Model message);
+    /**
+     * 转换 消息为包装类
+     * @param sessionId
+     * @param message
+     * @return
+     */
+    MessageWrapper convertToMessageWrapper(String sessionId, MessageProto message);
 
     /**
      * 保存在线消息
@@ -24,7 +30,7 @@ public interface IMessageProxy {
      * @param sessionId
      * @return
      */
-    MessageProto.Model  getOnLineStateMsg(String sessionId);
+    MessageProto  getOnLineStateMsg(String sessionId);
 
     /**
      * 重连状态消息
@@ -38,6 +44,6 @@ public interface IMessageProxy {
      * @param sessionId
      * @return
      */
-    MessageProto.Model  getOffLineStateMsg(String sessionId);
+    MessageProto  getOffLineStateMsg(String sessionId);
 }
 

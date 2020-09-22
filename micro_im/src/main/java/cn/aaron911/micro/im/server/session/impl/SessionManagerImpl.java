@@ -1,241 +1,244 @@
 package cn.aaron911.micro.im.server.session.impl;
 
 import cn.aaron911.micro.im.constant.Constants;
-import cn.aaron911.micro.im.dwr.DwrUtil;
 import cn.aaron911.micro.im.server.group.ImChannelGroup;
 import cn.aaron911.micro.im.server.model.MessageWrapper;
 import cn.aaron911.micro.im.server.model.Session;
 import cn.aaron911.micro.im.server.model.proto.MessageProto;
 import cn.aaron911.micro.im.server.proxy.IMessageProxy;
 import cn.aaron911.micro.im.server.session.ISessionManager;
+import cn.aaron911.micro.im.webserver.ImWebSocketMessageUtil;
+import cn.hutool.core.collection.CollUtil;
+import com.corundumstudio.socketio.SocketIOClient;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
 import lombok.extern.slf4j.Slf4j;
-import org.directwebremoting.ScriptSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
+
+/**
+ * Session会话管理实现类
+ */
 @Slf4j
 @Component
 public class SessionManagerImpl implements ISessionManager {
 
+    /**
+     * 保存当前所有会话session
+     * key sessionid
+     * value Session
+     */
+    private Map<String, Session> sessionMap = new ConcurrentHashMap<>();
+
+    /**
+     * 保存当前用户登录的所有会话id
+     * key userid
+     * value sessionid的set集合
+     */
+    private Map<String, Set<String>> userMap = new ConcurrentHashMap<>();
+
+
     @Autowired
     private IMessageProxy proxy;
 
+    @Autowired
+    private ImWebSocketMessageUtil webSocketMessageUtil;
 
-    /**
-     * The set of currently active Sessions for this Manager, keyed by session
-     * identifier.
-     */
-    protected Map<String, Session> sessions = new ConcurrentHashMap<>();
 
     @Override
     public synchronized void addSession(Session session) {
         if (null == session) {
             return;
-        } 
-        sessions.put(session.getAccount(), session);
-        if(session.getSource()!= Constants.ImserverConfig.DWR){
-        	ImChannelGroup.add(session.getSession());
+        }
+        sessionMap.put(session.getNid(), session);
+        final String userid = session.getAccount();
+        Set<String> sessionidSet = userMap.get(userid);
+        if (CollUtil.isEmpty(sessionidSet)) {
+            sessionidSet = new HashSet<>();
+            sessionidSet.add(session.getNid());
+        }else{
+            sessionidSet.add(session.getNid());
+        }
+        userMap.put(userid, sessionidSet);
+
+        if (session.getSource() == Constants.ImserverConfig.SOCKET) {
+            ImChannelGroup.add(session.getChannel());
         }
         //全员发送上线消息
-        MessageProto.Model model = proxy.getOnLineStateMsg(session.getAccount());
-        ImChannelGroup.broadcast(model);
-        DwrUtil.sedMessageToAll(model);
-        log.debug("put a session " + session.getAccount() + " to sessions!");
-        log.debug("session size " + sessions.size() );
+        MessageProto messageProto = proxy.getOnLineStateMsg(session.getAccount());
+        ImChannelGroup.broadcast(messageProto);
+        webSocketMessageUtil.sendToBroadcast(messageProto);
     }
 
     @Override
     public synchronized void updateSession(Session session) {
-        session.setUpdateTime(System.currentTimeMillis());
-        sessions.put(session.getAccount(), session);
+//        session.setUpdateTime(System.currentTimeMillis());
+//        sessions.put(session.getAccount(), session);
     }
 
     /**
-     * Remove this Session from the active Sessions for this Manager.
+     * 根据sessionid 删除会话, 注意：先关闭后删除
+     * 1. 根据sessionId 删除sessionMap 的value
+     * 2. 根据userid 删除 sessionidSet 中的 sessionid
+     * 3. 如果 sessionidSet 为空，则删除userMap的 key
+     * 4. 发送离线通知
      */
     @Override
-    public synchronized void removeSession(String sessionId) {
-    	try{
-    		Session session = getSession(sessionId);
-    		if(session!=null){
-    			session.closeAll();
-				sessions.remove(sessionId);
-				MessageProto.Model model = proxy.getOffLineStateMsg(sessionId);
-				ImChannelGroup.broadcast(model);
-				DwrUtil.sedMessageToAll(model);
-    		}  
-    	}catch(Exception e){
-            log.error("SessionManagerImpl.removeSession", e);
-    	}finally {
-            log.debug("session size " + sessions.size() );
-            log.info("system remove the session " + sessionId + " from sessions!");
+    public synchronized void removeSession(String sessionid) {
+        try {
+            Session session = getSession(sessionid);
+            if (session != null) {
+                session.close();
+                // * 1. 根据sessionId 删除sessionMap 的value
+                sessionMap.remove(sessionid);
+                // * 2. 根据userid 删除 sessionidSet 中的 sessionid
+                final String userid = session.getAccount();
+                final Set<String> sessionidSet = userMap.get(userid);
+                if (CollUtil.isNotEmpty(sessionidSet)) {
+                    sessionidSet.remove(sessionid);
+                }
+                //  * 3. 如果 sessionidSet 为空，则删除userMap的 key
+                if (CollUtil.isNotEmpty(sessionidSet)) {
+                    userMap.put(userid, sessionidSet);
+                }else{
+                    userMap.remove(userid);
+                }
+                // * 4. 发送离线通知
+                MessageProto messageProto = proxy.getOffLineStateMsg(sessionid);
+                ImChannelGroup.broadcast(messageProto);
+                webSocketMessageUtil.sendToBroadcast(messageProto);
+            }
+        } catch (Exception e) {
+            log.error("怎么会出错呢", e);
         }
     }
 
-    @Override
-    public synchronized void removeSession(String sessionId,String nid) {
-    	try{
-    		Session session = getSession(sessionId);
-    		if(session!=null){
-    			int source = session.getSource();
-    			if(source==Constants.ImserverConfig.WEBSOCKET || source==Constants.ImserverConfig.DWR){
-    				session.close(nid);
-    				//判断没有其它session后 从SessionManager里面移除
-    				if(session.otherSessionSize()<1){
-    					sessions.remove(sessionId);
-    					MessageProto.Model model = proxy.getOffLineStateMsg(sessionId);
-    					ImChannelGroup.broadcast(model);
-    					//dwr全员消息广播
-    					DwrUtil.sedMessageToAll(model);
-    				} 
-    			} else{
-    				session.close();
-    				sessions.remove(sessionId);
-    				MessageProto.Model model = proxy.getOffLineStateMsg(sessionId);
-    				ImChannelGroup.broadcast(model);
-    				DwrUtil.sedMessageToAll(model);
-    			}
-    		}  
-    	}catch(Exception e){
-            log.error("SessionManagerImpl.removeSession", e);
-    	}finally{
-            log.info("remove the session " + sessionId + " from sessions!");
-    	}
-    }
+
 
     @Override
     public Session getSession(String sessionId) {
-        return sessions.get(sessionId);
+        return sessionMap.get(sessionId);
     }
 
     @Override
     public Session[] getSessions() {
-        return sessions.values().toArray(new Session[0]);
+        return sessionMap.values().toArray(new Session[sessionMap.size()]);
     }
 
     @Override
     public Set<String> getSessionKeys() {
-        return sessions.keySet();
+        return sessionMap.keySet();
     }
 
     @Override
     public int getSessionCount() {
-        return sessions.size();
+        return sessionMap.size();
     }
 
+    /**
+     * netty
+     * @param wrapper
+     * @param ctx
+     * @return
+     */
     @Override
-    public  Session createSession(MessageWrapper wrapper, ChannelHandlerContext ctx) {
-    	String sessionId = wrapper.getSessionId();
-        Session session = sessions.get(sessionId);
+    public Session createSession(String userId, MessageWrapper wrapper, ChannelHandlerContext ctx) {
+        String sessionId = wrapper.getSessionId();
+        Session session = sessionMap.get(sessionId);
         if (session != null) {
-        	log.info("session " + sessionId + " exist!");
-        	//当链接来源不是同一来源或者 是socket链接，踢掉已经登录的session 
-        	if(session.getSource()==Constants.ImserverConfig.SOCKET){
-        		// 如果session已经存在则销毁session
+            //当链接来源不是同一来源或者 是socket链接，踢掉已经登录的session
+            if (session.getSource() == Constants.ImserverConfig.SOCKET) {
+                // 如果session已经存在则销毁session
                 //从广播组清除
-        		log.info("sessionId" + session.getNid() +"------------------"+ ctx.channel().id().asShortText()+ "      !");
-                ImChannelGroup.remove(session.getSession());
+                ImChannelGroup.remove(session.getChannel());
                 session.close(session.getNid());
-                sessions.remove(session.getAccount());
+                sessionMap.remove(session.getNid());
                 log.info("session " + sessionId + " have been closed!");
-        	}else if(session.getSource()==Constants.ImserverConfig.WEBSOCKET){
-        		//用于解决websocket多开页面session被踢下线的问题
-        		Session  newsession = setSessionContent(ctx,wrapper,sessionId);
-        		session.addSessions(newsession);
-        		updateSession(session);
-        		ImChannelGroup.add(newsession.getSession());
-                log.info("session " + sessionId + " update!");
-        		return newsession;
-        	}else if(session.getSource()==Constants.ImserverConfig.DWR){
-        		//清除dwr session
-        		log.info("sessionId ----" + session.getAccount() +" start remove !");
-        		session.closeAll();
-                sessions.remove(session.getAccount());
-                log.info("session " + sessionId + " have been closed!");
-        	}   
+            } else if (session.getSource() == Constants.ImserverConfig.WEBSOCKET) {
+                // 2020.9.22 不同源先不管
+            } else  {
+                log.info("暂未实现");
+            }
         }
-       
-        session = setSessionContent(ctx,wrapper,sessionId);
+        session = setSessionContent(ctx, wrapper, userId);
         addSession(session);
         return session;
     }
-    
-    
-	@Override
-	public Session createSession(ScriptSession scriptSession, String sessionid) {
-		 Session dwrsession = new Session(scriptSession);
-		 dwrsession.setAccount(sessionid);
-		 dwrsession.setSource(Constants.ImserverConfig.DWR);
-         dwrsession.setPlatform((String)scriptSession.getAttribute(Constants.DWRConfig.BROWSER));
-         dwrsession.setPlatformVersion((String)scriptSession.getAttribute(Constants.DWRConfig.BROWSER_VERSION));
-		 dwrsession.setBindTime(System.currentTimeMillis());
-		 dwrsession.setUpdateTime(System.currentTimeMillis());
-		 Session session = sessions.get(sessionid);
-         if (session != null) {
-        	 log.info("session " + sessionid + " exist!");
-    		 if(session.getSource()!=Constants.ImserverConfig.DWR){
-    			//从广播组清除
-         		 log.info("sessionId ----" + session.getAccount() +" start remove !");
-                 ImChannelGroup.remove(session.getSession());
-                 List<Channel> channels = session.getSessionAll();
-                 if(channels!=null&&channels.size()>0){
-                	 for(Channel cl:channels){
-                		 ImChannelGroup.remove(cl);
-                	 } 
-                 }
-                 //session.close();
-                 sessions.remove(session.getAccount());
-                 log.info("session " + sessionid + " have been closed!");
-    		 }else if(session.getSource()==Constants.ImserverConfig.DWR){
-         		session.addSessions(dwrsession);
-         		updateSession(session);
-                log.info("session " + sessionid + " update!");
-         		return dwrsession;
-    		 } 
-         }
-        addSession(dwrsession);
-		return dwrsession;
-	}
 
-    
+
     /**
-     * 设置session内容
-     * @param ctx
-     * @param wrapper
-     * @param sessionId
+     * SocketIOClient
+     * @param userId
+     * @param client
      * @return
      */
-    private Session  setSessionContent(ChannelHandlerContext ctx, MessageWrapper wrapper, String sessionId){
-    	 log.info("create new session " + sessionId + ", ctx -> " + ctx.toString());
-    	  MessageProto.Model model = (MessageProto.Model)wrapper.getBody();
-    	  Session session = new Session(ctx.channel());
-          session.setAccount(sessionId);
-          session.setSource(wrapper.getSource());
-          session.setAppKey(model.getAppKey());
-          session.setDeviceId(model.getDeviceId());
-          session.setPlatform(model.getPlatform());
-          session.setPlatformVersion(model.getPlatformVersion());
-          session.setSign(model.getSign());
-          session.setBindTime(System.currentTimeMillis());
-          session.setUpdateTime(session.getBindTime());
-          log.info("create new session " + sessionId + " successful!");
-          return session;
-    }
-     
+    @Override
+    public Session createSession(String userId, SocketIOClient client) {
+        Session socketIOClientSession = new Session(client);
+        socketIOClientSession.setAccount(userId);
+        socketIOClientSession.setSource(Constants.ImserverConfig.WEBSOCKET);
+        //socketIOClientSession.setPlatform((String)scriptSession.getAttribute(Constants.DWRConfig.BROWSER));
+        //socketIOClientSession.setPlatformVersion((String)scriptSession.getAttribute(Constants.DWRConfig.BROWSER_VERSION));
+        socketIOClientSession.setBindTime(System.currentTimeMillis());
+        socketIOClientSession.setUpdateTime(System.currentTimeMillis());
 
-	@Override
-	public boolean exist(String sessionId) {
+        final Set<String> sessionIdSet = userMap.get(userId);
+        // 该用户已经存在会话
+        if (CollUtil.isNotEmpty(sessionIdSet)) {
+            for(String sessionId: sessionIdSet){
+                final Session session = sessionMap.get(sessionId);
+                if (session != null) {
+                    if (session.getSource() == Constants.ImserverConfig.SOCKET) {
+                        //从广播组清除
+                        //ImChannelGroup.remove(session.getChannel());
+
+                        // 2020.9.22 不同类型的会话先不管
+                    }else if (session.getSource() == Constants.ImserverConfig.WEBSOCKET) {
+                        sessionMap.put(sessionId, socketIOClientSession);
+                        return socketIOClientSession;
+                    }
+                }
+            }
+        }
+        addSession(socketIOClientSession);
+        return socketIOClientSession;
+    }
+
+
+    /**
+     * 设置session内容
+     *
+     * @param ctx
+     * @param wrapper
+     * @param userId
+     * @return
+     */
+    private Session setSessionContent(ChannelHandlerContext ctx, MessageWrapper wrapper, String userId) {
+        log.info("create new session " + userId + ", ctx -> " + ctx.toString());
+        MessageProto model = (MessageProto) wrapper.getBody();
+        Session session = new Session(ctx.channel());
+        session.setAccount(userId);
+        session.setSource(wrapper.getSource());
+        session.setAppKey(model.getAppKey());
+        session.setDeviceId(model.getDeviceId());
+        session.setPlatform(model.getPlatform());
+        session.setPlatformVersion(model.getPlatformVersion());
+        session.setSign(model.getSign());
+        session.setBindTime(System.currentTimeMillis());
+        session.setUpdateTime(session.getBindTime());
+        return session;
+    }
+
+
+    @Override
+    public boolean exist(String sessionId) {
         Session session = getSession(sessionId);
         return session != null ? true : false;
-	}
- 
+    }
+
 
 }

@@ -1,14 +1,7 @@
-/**
- ***************************************************************************************
- *  @Author     1044053532@qq.com   
- *  @License    http://www.apache.org/licenses/LICENSE-2.0
- ***************************************************************************************
- */
 package cn.aaron911.micro.im.server.model;
 
 import cn.aaron911.micro.im.constant.Constants;
-import cn.aaron911.micro.im.server.model.proto.MessageBodyProto;
-import cn.aaron911.micro.im.server.model.proto.MessageProto;
+import com.corundumstudio.socketio.SocketIOClient;
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 
@@ -16,42 +9,114 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.directwebremoting.ScriptBuffer;
-import org.directwebremoting.ScriptSession;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
+
+import javax.validation.constraints.NotBlank;
+
 
 public class Session  implements Serializable{
 
-	private transient Channel session;
-	private ScriptSession dwrsession;
-	 
-	private String nid;//session在本台服务器上的ID
-	private int source;//来源 用于区分是websocket\socket\dwr
-	private String deviceId;//客户端ID  (设备号码+应用包名),ios为devicetoken
-	private String host;//session绑定的服务器IP
-	private String account;//session绑定的账号
-	private String platform;//终端类型  
-	private String platformVersion;//终端版本号
-	private String appKey;//客户端key
-	private Long bindTime;//登录时间
-	private Long updateTime;//更新时间
-	private String sign;//签名
-	private Double longitude;//经度
-	private Double latitude;//维度
-	private String location;//位置
-	private int status;// 状态
-	private Map<String,Session> sessions = new HashMap<String,Session>(); //用于dwr websocket存储多开页面创建的session
+	/**
+	 * 通过netty连接的用户会话
+	 */
+	private transient Channel channel;
 
-	public void addSessions(Session session){
-		sessions.put(session.getNid(), session);
+	/**
+	 * 通过websocket连接的用户会话
+	 */
+	private SocketIOClient socketIOClient;
+
+	/**
+	 * session在本台服务器上的ID
+	 * 通常使用 sessionid
+	 */
+	@NotBlank
+	private String nid;
+
+	/**
+	 * 来源 用于区分是websocket\socket
+	 */
+	private int source;
+
+	/**
+	 * 客户端ID  (设备号码+应用包名),ios为devicetoken
+	 */
+	private String deviceId;
+
+	/**
+	 * session绑定的服务器IP
+	 */
+	private String host;
+
+	/**
+	 * session绑定的账号
+	 * 可能是userid
+	 */
+	@NotBlank
+	private String account;
+
+	/**
+	 * 终端类型
+	 */
+	private String platform;
+
+	/**
+	 * 终端版本号
+	 */
+	private String platformVersion;
+
+	/**
+	 * 客户端key
+	 */
+	private String appKey;
+
+	/**
+	 * 登录时间
+	 */
+	private Long bindTime;
+
+	/**
+	 * 更新时间
+	 */
+	private Long updateTime;
+
+	/**
+	 * 签名
+	 */
+	private String sign;
+
+	/**
+	 * 经度
+	 */
+	private Double longitude;
+
+	/**
+	 * 维度
+	 */
+	private Double latitude;
+
+	/**
+	 * 位置
+	 */
+	private String location;
+
+	/**
+	 * 状态
+	 */
+	private int status;
+
+
+	public Session(Channel channel) {
+		this.channel = channel;
+		this.nid = channel.id().asShortText();
 	}
+
+	public Session(SocketIOClient socketIOClient) {
+		this.socketIOClient = socketIOClient;
+		this.nid = socketIOClient.getSessionId().toString();
+	}
+
 
 	public Long getUpdateTime() {
 		return updateTime;
@@ -61,27 +126,6 @@ public class Session  implements Serializable{
 		this.updateTime = updateTime;
 		setAttribute("updateTime", updateTime);
 	}
-
-	public Session(ScriptSession session) {
-		this.dwrsession = session;
-		this.nid = session.getId();
-	}
-	 
-	public Session(Channel session) {
-		this.session = session;
-		this.nid = session.id().asShortText();
-	}
- 
-	public Session() { }
-
-	public ScriptSession getDwrsession() {
-		return dwrsession;
-	}
-
-	public void setDwrsession(ScriptSession dwrsession) {
-		this.dwrsession = dwrsession;
-	}
-
 
 	public String getAccount() {
 		return account;
@@ -157,8 +201,8 @@ public class Session  implements Serializable{
 		setAttribute("host", host);
 	}
 
-	public void setChannel(Channel session) {
-		this.session = session;
+	public void setChannel(Channel channel) {
+		this.channel = channel;
 	}
  
 	public int getStatus() {
@@ -170,24 +214,8 @@ public class Session  implements Serializable{
 		setAttribute("status", status);
 	}
 	
-	public Channel getSession() {
-		return session;
-	}
-	
-	public List<Channel> getSessionAll(){
-		  List<Channel>  list= new ArrayList<Channel>();
-		  list.add(getSession());
-		  for (String key : sessions.keySet()) {
-				Session  session = sessions.get(key);
-				if(session!=null){
-					list.add(session.getSession()); 
-				}
-		  }
-		  return list;
-	}
-
-	public void setSession(Channel session) {
-		this.session = session;
+	public Channel getChannel() {
+		return channel;
 	}
 
 	public String getPlatform() {
@@ -236,88 +264,47 @@ public class Session  implements Serializable{
 	}
 
 	public void setAttribute(String key, Object value) {
-		if(session!=null){
-			session.attr(AttributeKey.valueOf(key)).set(value);
+		if(channel!=null){
+			channel.attr(AttributeKey.valueOf(key)).set(value);
 		}
 	}
 
 	public boolean containsAttribute(String key) {
-		if(session!=null){
-			return session.hasAttr(AttributeKey.valueOf(key));
+		if(channel!=null){
+			return channel.hasAttr(AttributeKey.valueOf(key));
 		}
 		return false;
 	}
 	
 	public Object getAttribute(String key) {
-		if(session!=null){
-			return session.attr(AttributeKey.valueOf(key)).get();
+		if(channel!=null){
+			return channel.attr(AttributeKey.valueOf(key)).get();
 		}
 		return null;
 	}
 
 	public void removeAttribute(String key) {
-		if(session!=null){
-			session.attr(AttributeKey.valueOf(key)).set(null);;
+		if(channel!=null){
+			channel.attr(AttributeKey.valueOf(key)).set(null);;
 		}
 	}
 
 	public SocketAddress getRemoteAddress() {
-		if(session!=null){
-			return session.remoteAddress();
+		if(channel!=null){
+			return channel.remoteAddress();
 		}
 		return null;
 	}
 
-	public  boolean write(Object msg) {
-		if(sessions.size()>0){
-			for (String key : sessions.keySet()) {
-				Session  session = sessions.get(key);
-				if(session!=null){
-					session.write(msg);
-				}
-			}
-		} 
-		if(session!=null&&isConnected())
-		{
-			return session.writeAndFlush(msg).awaitUninterruptibly(5000);
-		}else if(dwrsession!=null&&isConnected()){
-			try{
-				MessageProto.Model  msgModel = (MessageProto.Model)msg;
-				MessageBodyProto.MessageBody  content = MessageBodyProto.MessageBody.parseFrom(msgModel.getContent());
-				Map<String,Object> map = new HashMap<String,Object>();
-				map.put("user", Constants.DWRConfig.JSONFORMAT.printToString(msgModel));
-				map.put("content", Constants.DWRConfig.JSONFORMAT.printToString(content));
-				ScriptBuffer script = new ScriptBuffer();  
-				script.appendCall(Constants.DWRConfig.DWR_SCRIPT_FUNCTIONNAME, JSONArray.toJSON(map));  
-				dwrsession.addScript(script);
-				//protobuf 不支持低版本IE 没法使用protobuf  支持可以使用以下方法
-				/*MessageProto.Model  msgModel = (MessageProto.Model)msg;
-				ScriptBuffer script = new ScriptBuffer();  
-				Object json = JSONArray.toJSON(msgModel.toByteArray());
-				script.appendCall(Constants.DWRConfig.DWR_SCRIPT_FUNCTIONNAME, json);  
-				dwrsession.addScript(script); */
-				return  true; 
-			}catch(Exception e){
-				
-			}
-		} 
-		return false;
-	}
+
 
 	
 	public boolean isConnected() {
-		//判断是否有多个session
-		if(sessions!=null&&sessions.size()>0){
-			for (String key : sessions.keySet()) {
-				Session  session = sessions.get(key);
-				if(session!=null && session.isConnected()){
-					return true;
-				}
-			}
-		}else if(session != null){
-			return session.isActive();
-		}else if(dwrsession!=null){
-			return !dwrsession.isInvalidated();
+		if(channel != null){
+			return channel.isActive();
+		}
+		else if(socketIOClient!=null){
+			return socketIOClient.isChannelOpen();
 		}
 		return false;
 	}
@@ -332,38 +319,21 @@ public class Session  implements Serializable{
 		return false;
 	}
 
-	public int  otherSessionSize()
-	{
-		return sessions.size();
-	}
 
 	public void close() {
-		if(session!=null){
-			session.close();
-		}else if(dwrsession!=null){
-			dwrsession.invalidate();
+		if(channel!=null){
+			channel.close();
+		}
+		else if(socketIOClient!=null){
+			socketIOClient.disconnect();
 		}
 	}
-	
-	public void closeAll() {
-		close();
-		for (String key : sessions.keySet()) {
-			Session  session = sessions.get(key);
-			if(session!=null){
-				session.close();
-				sessions.remove(key);
-			}
-		}
-	}
+
 
 	public void close(String nid) {
 		if(getNid().equals(nid)){
 			close();
-		}else{
-			Session  session = sessions.get(nid);
-			sessions.remove(nid);
-			session.close();
-		} 
+		}
 	}
 	
 	@Override
@@ -397,5 +367,16 @@ public class Session  implements Serializable{
 	@Override
 	public String  toString(){
 		return  JSON.toJSONString(Session.this);
+	}
+
+
+
+
+
+
+
+	public  boolean write(Object msg) {
+		channel.write(msg);
+		return false;
 	}
 }

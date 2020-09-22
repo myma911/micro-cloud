@@ -43,22 +43,22 @@ public class MLRebotProxy implements IRobotProxy {
             param.put("limit", "5");
             param.put("question", content);
             message = HttpUtil.post(imProperty.getRobotApiUrl(), param, 62000);
-            MessageProto.Model.Builder result = MessageProto.Model.newBuilder();
-            result.setCmd(Constants.CmdType.MESSAGE);
-            result.setMsgtype(Constants.ProtobufType.REPLY);
+            MessageProto messageProto = new MessageProto();
+            messageProto.setCmd(Constants.CmdType.MESSAGE);
+            messageProto.setMsgtype(Constants.ProtobufType.REPLY);
             //机器人ID
-            result.setSender(Constants.ImserverConfig.REBOT_SESSIONID);
+            messageProto.setSender(Constants.ImserverConfig.REBOT_SESSIONID);
             //回复人
-            result.setReceiver(user);
-            result.setTimeStamp(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-            MessageBodyProto.MessageBody.Builder msgbody = MessageBodyProto.MessageBody.newBuilder();
-            msgbody.setContent(message);
-            result.setContent(msgbody.build().toByteString());
-            return new MessageWrapper(MessageWrapper.MessageProtocol.REPLY, Constants.ImserverConfig.REBOT_SESSIONID, user, result.build());
+            messageProto.setReceiver(user);
+            messageProto.setTimeStamp(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            MessageBodyProto messageBodyProto = new MessageBodyProto();
+            messageBodyProto.setContent(message);
+            messageProto.setMessageBody(messageBodyProto);
+            return new MessageWrapper(MessageWrapper.MessageProtocol.REPLY, Constants.ImserverConfig.REBOT_SESSIONID, user, messageProto);
         } catch (Exception e) {
             log.error("", e);
         }
-        MessageProto.Model.Builder result = MessageProto.Model.newBuilder();
-        return new MessageWrapper(MessageWrapper.MessageProtocol.REPLY, Constants.ImserverConfig.REBOT_SESSIONID, user, result.build());
+        MessageProto messageProto = new MessageProto();
+        return new MessageWrapper(MessageWrapper.MessageProtocol.REPLY, Constants.ImserverConfig.REBOT_SESSIONID, user, messageProto);
     }
 }
